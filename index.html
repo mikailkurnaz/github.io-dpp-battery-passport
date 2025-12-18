@@ -3,15 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="color-scheme" content="dark light">
-  <title>DPP Battery Passport — Viewer (Demo)</title>
+  <meta name="color-scheme" content="dark light" />
+  <title>DPP Battery Passport — Viewer</title>
 
   <style>
     :root{
       --bg:#0b1220;
       --surface:#0f172a;
       --card:#111c33;
-      --card2:#0f1a30;
       --line:#22314f;
       --text:#eaf1ff;
       --muted:#9fb0cc;
@@ -25,33 +24,31 @@
       --pad: 14px;
       --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
-
     @media (prefers-color-scheme: light){
       :root{
         --bg:#f6f8ff;
         --surface:#ffffff;
         --card:#ffffff;
-        --card2:#f6f8ff;
         --line:#dde4f3;
         --text:#0c1428;
         --muted:#5e6a83;
         --shadow: 0 14px 40px rgba(15, 23, 42, .12);
       }
     }
-
     *{ box-sizing:border-box; }
     body{
       margin:0;
       font-family:var(--font);
-      background: radial-gradient(1200px 700px at 20% -10%, rgba(93,214,255,.18), transparent 60%),
-                  radial-gradient(900px 600px at 95% 0%, rgba(43,228,167,.12), transparent 55%),
-                  var(--bg);
+      background:
+        radial-gradient(1200px 700px at 20% -10%, rgba(93,214,255,.18), transparent 60%),
+        radial-gradient(900px 600px at 95% 0%, rgba(43,228,167,.12), transparent 55%),
+        var(--bg);
       color:var(--text);
     }
     a{ color: var(--brand); text-decoration:none; }
     a:hover{ text-decoration:underline; }
 
-    .wrap{ max-width: 1060px; margin: 0 auto; padding: 22px 16px 60px; }
+    .wrap{ max-width: 1100px; margin: 0 auto; padding: 22px 16px 56px; }
     .top{
       display:flex; align-items:flex-start; justify-content:space-between;
       gap:14px; flex-wrap:wrap;
@@ -67,18 +64,16 @@
     }
     .logo{
       width:38px; height:38px; border-radius: 14px;
-      background: radial-gradient(circle at 30% 30%, rgba(93,214,255,.9), rgba(93,214,255,.25) 55%, transparent 70%),
-                  radial-gradient(circle at 70% 70%, rgba(43,228,167,.9), rgba(43,228,167,.18) 58%, transparent 72%),
-                  rgba(255,255,255,.04);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(93,214,255,.9), rgba(93,214,255,.25) 55%, transparent 70%),
+        radial-gradient(circle at 70% 70%, rgba(43,228,167,.9), rgba(43,228,167,.18) 58%, transparent 72%),
+        rgba(255,255,255,.04);
       border:1px solid rgba(255,255,255,.10);
     }
     h1{ margin:0; font-size: 16px; letter-spacing:.2px; }
-    .sub{ margin-top:6px; color:var(--muted); font-size: 12.5px; line-height:1.35; max-width: 540px; }
+    .sub{ margin-top:6px; color:var(--muted); font-size: 12.5px; line-height:1.35; max-width: 560px; }
 
-    .controls{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end;
-    }
-
+    .controls{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
     .field{
       display:flex; gap:8px; align-items:center;
       padding:10px 12px;
@@ -91,7 +86,8 @@
       border:0; outline:0; background: transparent; color:var(--text);
       font-size: 14px; min-width: 240px;
     }
-    .field select{ min-width: 160px; cursor:pointer; }
+    .field select{ min-width: 180px; cursor:pointer; }
+
     .btn{
       border:1px solid var(--line);
       background: rgba(255,255,255,.04);
@@ -112,6 +108,9 @@
 
     .grid{ display:grid; grid-template-columns: 1fr; gap: 12px; margin-top:14px; }
 
+    .row2{ display:grid; grid-template-columns: 1.35fr .85fr; gap:12px; }
+    @media (max-width: 900px){ .row2{ grid-template-columns: 1fr; } }
+
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.06), transparent 40%), var(--card);
       border:1px solid var(--line);
@@ -119,7 +118,6 @@
       padding: var(--pad);
       box-shadow: var(--shadow);
     }
-
     .card h2{
       margin:0 0 10px;
       font-size: 13px;
@@ -127,6 +125,7 @@
       color: rgba(93,214,255,.95);
       display:flex; align-items:center; justify-content:space-between; gap:10px;
     }
+
     .pill{
       display:inline-flex; gap:6px; align-items:center;
       padding: 5px 10px;
@@ -147,15 +146,13 @@
       line-height: 1.35;
     }
     .k{ color: var(--muted); }
-    .v{ color: var(--text); }
+    .v{ color: var(--text); word-break: break-word; }
     @media (max-width: 700px){
       .kv{ grid-template-columns: 1fr; }
       .field input{ min-width: 160px; }
     }
 
-    .tabs{
-      display:flex; gap:8px; flex-wrap:wrap; margin: 6px 0 0;
-    }
+    .tabs{ display:flex; gap:8px; flex-wrap:wrap; margin: 6px 0 0; }
     .tab{
       padding:8px 10px;
       border:1px solid var(--line);
@@ -170,26 +167,6 @@
       color: var(--text);
       border-color: rgba(93,214,255,.55);
       background: rgba(93,214,255,.12);
-    }
-
-    details{
-      border:1px solid var(--line);
-      border-radius: var(--radius2);
-      background: rgba(255,255,255,.02);
-      padding: 10px 12px;
-    }
-    summary{ cursor:pointer; color: var(--text); font-size: 13px; }
-    summary::marker{ color: var(--muted); }
-    .note{ margin-top:10px; color: var(--muted); font-size: 12.5px; line-height:1.45; }
-
-    pre{
-      margin: 10px 0 0;
-      background: var(--surface);
-      border:1px solid var(--line);
-      border-radius: var(--radius2);
-      padding: 12px;
-      overflow:auto;
-      font-size: 12px;
     }
 
     .status{
@@ -208,14 +185,30 @@
     .badge.good{ border-color: rgba(43,228,167,.45); background: rgba(43,228,167,.10); color: var(--text); }
     .badge.warn{ border-color: rgba(255,204,102,.55); background: rgba(255,204,102,.12); color: var(--text); }
     .badge.bad{  border-color: rgba(255,93,122,.55); background: rgba(255,93,122,.12); color: var(--text); }
-    .mini{
-      width:10px; height:10px; border-radius:3px; background: var(--muted);
+    .mini{ width:10px; height:10px; border-radius:3px; background: var(--muted); }
+
+    details{
+      border:1px solid var(--line);
+      border-radius: var(--radius2);
+      background: rgba(255,255,255,.02);
+      padding: 10px 12px;
+    }
+    summary{ cursor:pointer; color: var(--text); font-size: 13px; }
+    .note{ margin-top:10px; color: var(--muted); font-size: 12.5px; line-height:1.45; }
+
+    pre{
+      margin: 10px 0 0;
+      background: var(--surface);
+      border:1px solid var(--line);
+      border-radius: var(--radius2);
+      padding: 12px;
+      overflow:auto;
+      font-size: 12px;
     }
 
     /* Clean mode for thesis screenshots */
     .clean .top, .clean .helper { display:none !important; }
     .clean .wrap{ padding-top: 12px; }
-    .helper{ margin-top: 12px; }
 
     /* Print-friendly */
     @media print{
@@ -229,20 +222,21 @@
 
 <body>
   <div class="wrap">
+    <!-- HEADER -->
     <div class="top" id="topbar">
       <div class="brand">
         <div class="logo" aria-hidden="true"></div>
         <div>
-          <h1>DPP Battery Passport — Viewer (Demo)</h1>
+          <h1>DPP Battery Passport — Viewer</h1>
           <div class="sub">
-            QR ile erişilen pasaport içeriği, <b>Public / Legitimate interest / Authorities</b> görünümleriyle gösterilir.
+            QR ile erişilen pasaport içeriği <b>Public / Professional / Authority</b> görünümleriyle sunulur.
             Bu sayfa tez için <b>prototip</b> amaçlıdır.
           </div>
 
           <div class="tabs" id="roleTabs" aria-label="Role tabs">
             <div class="tab" data-role="public">Public</div>
-            <div class="tab" data-role="legitimate_interest">Legitimate interest</div>
-            <div class="tab" data-role="authorities">Authorities / NB</div>
+            <div class="tab" data-role="professional">Professional</div>
+            <div class="tab" data-role="authority">Authority / NB</div>
           </div>
         </div>
       </div>
@@ -266,99 +260,150 @@
       </div>
     </div>
 
+    <!-- CONTENT -->
     <div class="grid" id="content"></div>
 
     <div class="helper card">
-      <h2>Tez için hızlı ipuçları <span class="pill"><span class="dot"></span> Screenshot</span></h2>
+      <h2>Tez için ipuçları <span class="pill"><span class="dot"></span> Screenshot</span></h2>
       <div class="note">
-        • “Temiz ekran” (üst bar gizli): URL sonuna <code>&mode=clean</code> ekle.<br/>
-        • Yazdır / PDF almak için “PDF / Yazdır” butonunu kullan.<br/>
-        • UID veya rol hatalıysa “Bulunamadı” ekranı çıkar (test senaryosu olarak yazılabilir).
+        • Temiz ekran (üst bar gizli): URL sonuna <code>&mode=clean</code> ekle.<br/>
+        • QR’lar için örnek format: <code>?uid=...&role=public</code> / <code>professional</code> / <code>authority</code>.<br/>
+        • Gerçek hayatta “professional/authority” ekranları login + yetkilendirme gerektirir (bu demo bunları simüle eder).
       </div>
     </div>
   </div>
 
 <script>
-  // =========================
-  // DEMO DATA (temsili)
-  // =========================
+  // =========================================================
+  // 1) DEMO DATA (temsili) — İstersen burayı genişletiriz
+  // =========================================================
   const PASSPORTS = {
     "urn:iso:15459:DPPBAT.CN.EV.2026.000001": {
       passport_version: "1.0",
       uid: "urn:iso:15459:DPPBAT.CN.EV.2026.000001",
-      public_model: {
-        battery_type: "EV traction battery",
-        model_id: "CN-EV-NMC-60kWh-2026",
-        manufacturer: "Shenzhen PowerCell Ltd. (CN)",
-        manufacturing_site: "Shenzhen, Guangdong (CN)",
-        chemistry: "Li-ion (NMC 811 / Graphite)",
-        rated_energy_kWh: 60.0,
-        voltage_min_nom_max_V: "300 / 355 / 403",
-        rated_capacity_Ah: 170,
-        expected_cycles_to_80pct: 1500,
-        carbon_footprint_kgCO2e_per_kWh: 58.0,
-        recycled_content: "Co 6% · Ni 5% · Li 2%",
-        renewable_content_share_pct: 28
+
+      // PUBLIC (QR okutunca default)
+      public: {
+        overview: {
+          battery_category: "EV traction battery",
+          model_id: "CN-EV-NMC-60kWh-2026",
+          manufacturer: "Shenzhen PowerCell Ltd. (CN)",
+          manufacturing_site: "Shenzhen, Guangdong (CN)",
+          production_date: "December 2026",
+          chemistry: "Li-ion (NMC 811 / Graphite)",
+          rated_energy_kWh: 60.0,
+          rated_capacity_Ah: 170,
+          voltage_min_nom_max_V: "300 / 355 / 403"
+        },
+        sustainability: {
+          carbon_footprint_kgCO2e_per_kWh: 58.0,
+          recycled_content: "Co 6% · Ni 5% · Li 2%",
+          responsible_sourcing_url: "https://example.com/due-diligence-demo",
+          notes: "Demo values for thesis prototype."
+        },
+        safety: {
+          hazardous_substances_summary: "Declared (demo). Critical raw materials include Li, Ni, Co, Mn, Graphite.",
+          extinguishing_agent: "Water mist / Class D media / BC powder (illustrative)"
+        },
+        documents: [
+          { title: "EU Declaration of Conformity (demo)", url: "https://example.com/eu-doc-demo" },
+          { title: "Carbon footprint study (demo)", url: "https://example.com/pcf-demo" }
+        ]
       },
-      restricted_model_legitimate_interest: {
-        detailed_composition: "Cathode: NMC 811 | Anode: Graphite | Electrolyte: LiPF6 in carbonates (illustrative)",
-        dismantling: "HV isolation + PPE required; disassembly docs (demo).",
-        spare_parts: ["SP-HVCON-01","SP-BMS-96S-02"]
+
+      // PROFESSIONAL (meşru menfaat) — demo
+      professional: {
+        dismantling: {
+          safety_measures: ["HV isolation required", "PPE class 0+", "Thermal runaway precautions"],
+          tools_required: ["Torx set", "Insulated socket set", "Multimeter CAT III/1000V"],
+          disassembly_sequence_ref: "https://example.com/disassembly-demo"
+        },
+        spare_parts: [
+          { part_no: "SP-HVCON-01", description: "HV connector set" },
+          { part_no: "SP-BMS-96S-02", description: "BMS board (96s)" }
+        ]
       },
-      restricted_model_authorities: {
-        test_reports: ["TR-CN-EV-2026-EMC-01 (demo)"]
-      },
-      restricted_individual: {
-        serial_no: "CN26EV000001-001",
-        battery_status: "original",
-        put_into_service_date: "2026-12-15",
-        soh_pct: 98.4,
-        charge_cycles: 62,
-        avg_operating_temp_C: 26
+
+      // AUTHORITY / NB — demo
+      authority: {
+        conformity_evidence: [
+          { report_id: "TR-CN-EV-2026-EMC-01", title: "EMC/Safety summary (demo)", url: "https://example.com/test-report-demo" }
+        ],
+        individual_battery: {
+          serial_no: "CN26EV000001-001",
+          status: "original",
+          put_into_service_date: "2026-12-15",
+          soh_pct: 98.4,
+          charge_cycles: 62,
+          avg_operating_temp_C: 26
+        }
       }
     },
 
     "urn:iso:15459:DPPBAT.EU.EV.2026.000001": {
       passport_version: "1.0",
       uid: "urn:iso:15459:DPPBAT.EU.EV.2026.000001",
-      public_model: {
-        battery_type: "EV traction battery",
-        model_id: "EU-EV-NMC-60kWh-2026",
-        manufacturer: "EuroCell Energy S.A. (EU)",
-        manufacturing_site: "Wroclaw (PL)",
-        chemistry: "Li-ion (NMC 622 / Graphite)",
-        rated_energy_kWh: 60.0,
-        voltage_min_nom_max_V: "300 / 355 / 403",
-        rated_capacity_Ah: 170,
-        expected_cycles_to_80pct: 1700,
-        carbon_footprint_kgCO2e_per_kWh: 41.5,
-        recycled_content: "Co 10% · Ni 8% · Li 4%",
-        renewable_content_share_pct: 66
+
+      public: {
+        overview: {
+          battery_category: "EV traction battery",
+          model_id: "EU-EV-NMC-60kWh-2026",
+          manufacturer: "EuroCell Energy S.A. (EU)",
+          manufacturing_site: "Wroclaw (PL)",
+          production_date: "December 2026",
+          chemistry: "Li-ion (NMC 622 / Graphite)",
+          rated_energy_kWh: 60.0,
+          rated_capacity_Ah: 170,
+          voltage_min_nom_max_V: "300 / 355 / 403"
+        },
+        sustainability: {
+          carbon_footprint_kgCO2e_per_kWh: 41.5,
+          recycled_content: "Co 10% · Ni 8% · Li 4%",
+          responsible_sourcing_url: "https://example.com/due-diligence-demo",
+          notes: "Demo values for thesis prototype."
+        },
+        safety: {
+          hazardous_substances_summary: "Declared (demo). Critical raw materials include Li, Ni, Co, Mn, Graphite.",
+          extinguishing_agent: "Water mist / Class D media / BC powder (illustrative)"
+        },
+        documents: [
+          { title: "EU Declaration of Conformity (demo)", url: "https://example.com/eu-doc-demo" },
+          { title: "Carbon footprint study (demo)", url: "https://example.com/pcf-demo" }
+        ]
       },
-      restricted_model_legitimate_interest: {
-        detailed_composition: "Cathode: NMC 622 | Anode: Graphite | Electrolyte: LiPF6 in carbonates (illustrative)",
-        dismantling: "HV isolation + thermal-runaway precautions (demo).",
-        spare_parts: ["SP-HVCON-01","SP-BMS-96S-02"]
+
+      professional: {
+        dismantling: {
+          safety_measures: ["HV isolation required", "PPE class 0+", "Avoid short-circuit during dismantling"],
+          tools_required: ["Torx set", "Insulated socket set", "Multimeter CAT III/1000V"],
+          disassembly_sequence_ref: "https://example.com/disassembly-demo"
+        },
+        spare_parts: [
+          { part_no: "SP-HVCON-01", description: "HV connector set" },
+          { part_no: "SP-BMS-96S-02", description: "BMS board (96s)" }
+        ]
       },
-      restricted_model_authorities: {
-        test_reports: ["TR-EU-EV-2026-EMC-01 (demo)"]
-      },
-      restricted_individual: {
-        serial_no: "EU26EV000001-001",
-        battery_status: "original",
-        put_into_service_date: "2026-12-15",
-        soh_pct: 99.1,
-        charge_cycles: 58,
-        avg_operating_temp_C: 24
+
+      authority: {
+        conformity_evidence: [
+          { report_id: "TR-EU-EV-2026-EMC-01", title: "EMC/Safety summary (demo)", url: "https://example.com/test-report-demo" }
+        ],
+        individual_battery: {
+          serial_no: "EU26EV000001-001",
+          status: "original",
+          put_into_service_date: "2026-12-15",
+          soh_pct: 99.1,
+          charge_cycles: 58,
+          avg_operating_temp_C: 24
+        }
       }
     }
   };
 
-  // =========================
-  // Utilities
-  // =========================
+  // =========================================================
+  // 2) Helpers
+  // =========================================================
   const qs = new URLSearchParams(window.location.search);
-
   const uidEl = document.getElementById("uid");
   const presetEl = document.getElementById("preset");
   const contentEl = document.getElementById("content");
@@ -367,178 +412,247 @@
   function escapeHtml(s){
     return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
   }
-
   function row(k, v){
     return `<div class="k">${escapeHtml(k)}</div><div class="v">${v ?? "-"}</div>`;
   }
-
   function pill(text){
     return `<span class="pill"><span class="dot"></span>${escapeHtml(text)}</span>`;
   }
-
-  function statusBadge(label, level){
+  function badge(label, level){
     return `<span class="badge ${level}"><span class="mini"></span>${escapeHtml(label)}</span>`;
   }
-
-  function makeCard(title, bodyHtml, rightHtml=""){
-    return `
-      <div class="card">
-        <h2>${escapeHtml(title)} ${rightHtml}</h2>
-        ${bodyHtml}
-      </div>
-    `;
+  function card(title, bodyHtml, rightHtml=""){
+    return `<div class="card"><h2>${escapeHtml(title)} ${rightHtml}</h2>${bodyHtml}</div>`;
   }
-
-  function currentBase(){
+  function baseUrl(){
     return window.location.origin + window.location.pathname;
   }
-
   function buildLink(uid, role){
-    const base = currentBase();
     const p = new URLSearchParams();
     p.set("uid", uid);
     p.set("role", role);
     if(qs.get("mode")==="clean") p.set("mode","clean");
-    return `${base}?${p.toString()}`;
+    return `${baseUrl()}?${p.toString()}`;
   }
-
   function setActiveRole(role){
     [...roleTabs.querySelectorAll(".tab")].forEach(t=>{
       t.classList.toggle("active", t.dataset.role === role);
     });
   }
 
+  // =========================================================
+  // 3) Render (Public/Professional/Authority)
+  // =========================================================
   function render(uid, role){
     contentEl.innerHTML = "";
-
     const p = PASSPORTS[uid];
+
     if(!p){
-      contentEl.innerHTML = makeCard("Bulunamadı", `
+      contentEl.innerHTML = card("Bulunamadı", `
         <div class="note">Bu UID için demo kayıt yok:</div>
         <div class="status">${pill(uid)}</div>
-        <div class="note">“Demo” menüsünden örnek bir UID seçebilirsin.</div>
-      `, statusBadge("UID not found","bad"));
+        <div class="note">“Demo” menüsünden bir kayıt seçebilirsin.</div>
+      `, badge("UID not found","bad"));
       return;
     }
 
-    // Header / Identity
-    contentEl.innerHTML += makeCard("Kimlik", `
-      <div class="kv">
-        ${row("passport_version", escapeHtml(p.passport_version))}
-        ${row("uid", `<span class="pill">${escapeHtml(p.uid)}</span>`)}
-        ${row("role (demo)", `<span class="pill">${escapeHtml(role)}</span>`)}
-        ${row("shareable link", `<a href="${buildLink(uid, role)}">${escapeHtml(buildLink(uid, role))}</a>`)}
-      </div>
-    `, statusBadge("OK","good"));
+    // --- Top row cards (Overview + Safety) ---
+    const o = p.public.overview;
+    const s = p.public.safety;
 
-    // Public model (always visible)
-    const m = p.public_model;
-    contentEl.innerHTML += makeCard("Public — Model bilgileri", `
+    const overviewCard = card("Battery Passport Overview", `
       <div class="kv">
-        ${row("battery_type", escapeHtml(m.battery_type))}
-        ${row("model_id", escapeHtml(m.model_id))}
-        ${row("manufacturer", escapeHtml(m.manufacturer))}
-        ${row("manufacturing_site", escapeHtml(m.manufacturing_site))}
-        ${row("chemistry", escapeHtml(m.chemistry))}
-        ${row("rated_energy_kWh", escapeHtml(m.rated_energy_kWh))}
-        ${row("voltage (min/nom/max) V", escapeHtml(m.voltage_min_nom_max_V))}
-        ${row("rated_capacity_Ah", escapeHtml(m.rated_capacity_Ah))}
-        ${row("expected_cycles_to_80%", escapeHtml(m.expected_cycles_to_80pct))}
-        ${row("carbon_footprint (kgCO2e/kWh)", escapeHtml(m.carbon_footprint_kgCO2e_per_kWh))}
-        ${row("recycled_content", escapeHtml(m.recycled_content))}
-        ${row("renewable_content_share (%)", escapeHtml(m.renewable_content_share_pct))}
+        ${row("UID", `<span class="pill">${escapeHtml(p.uid)}</span>`)}
+        ${row("Battery category", escapeHtml(o.battery_category))}
+        ${row("Manufacturer", escapeHtml(o.manufacturer))}
+        ${row("Manufacturing site", escapeHtml(o.manufacturing_site))}
+        ${row("Production date", escapeHtml(o.production_date))}
+        ${row("Chemistry", escapeHtml(o.chemistry))}
+        ${row("Rated energy (kWh)", escapeHtml(o.rated_energy_kWh))}
+        ${row("Rated capacity (Ah)", escapeHtml(o.rated_capacity_Ah))}
+        ${row("Voltage (min/nom/max) V", escapeHtml(o.voltage_min_nom_max_V))}
       </div>
-
       <div class="status">
-        ${statusBadge("Public view","good")}
-        ${role==="legitimate_interest" ? statusBadge("Restricted (LI) enabled","warn") : ""}
-        ${role==="authorities" ? statusBadge("Authorities enabled","warn") : ""}
+        ${badge("Public view", "good")}
+        ${role==="professional" ? badge("Professional enabled (demo)", "warn") : ""}
+        ${role==="authority" ? badge("Authority enabled (demo)", "warn") : ""}
       </div>
     `);
 
-    // Legitimate interest
-    if(role === "legitimate_interest"){
-      const r = p.restricted_model_legitimate_interest;
-      contentEl.innerHTML += makeCard("Restricted — Legitimate interest (demo)", `
+    const safetyCard = card("Safety Snapshot", `
+      <div class="kv">
+        ${row("Hazardous substances", escapeHtml(s.hazardous_substances_summary))}
+        ${row("Extinguishing agent", escapeHtml(s.extinguishing_agent))}
+      </div>
+    `);
+
+    contentEl.innerHTML += `<div class="row2">${overviewCard}${safetyCard}</div>`;
+
+    // --- Tabs inside page (Details sections) ---
+    const nav = `
+      <div class="tabs" id="sectionTabs">
+        <div class="tab active" data-section="details">Details</div>
+        <div class="tab" data-section="sustainability">Sustainability</div>
+        <div class="tab" data-section="circularity">Circularity</div>
+        <div class="tab" data-section="documents">Documents</div>
+        <div class="tab" data-section="access">Professional Access</div>
+      </div>
+    `;
+    contentEl.innerHTML += card("Navigation", nav);
+
+    // --- Section containers ---
+    contentEl.innerHTML += `
+      <div id="section_details"></div>
+      <div id="section_sustainability" style="display:none"></div>
+      <div id="section_circularity" style="display:none"></div>
+      <div id="section_documents" style="display:none"></div>
+      <div id="section_access" style="display:none"></div>
+    `;
+
+    // DETAILS (public)
+    document.getElementById("section_details").innerHTML = card("Details (Public)", `
+      <div class="kv">
+        ${row("Model ID", escapeHtml(o.model_id))}
+        ${row("Shareable link", `<a href="${buildLink(uid, role)}">${escapeHtml(buildLink(uid, role))}</a>`)}
+      </div>
+      <div class="note">Not: Bu sayfa prototiptir. Gerçek uygulamada veri güncelleme, imza/hash, yetkilendirme gibi bileşenler eklenir.</div>
+    `);
+
+    // SUSTAINABILITY (public)
+    const su = p.public.sustainability;
+    document.getElementById("section_sustainability").innerHTML = card("Sustainability Snapshot (Public)", `
+      <div class="kv">
+        ${row("Battery carbon footprint (kgCO₂e/kWh)", `<b>${escapeHtml(su.carbon_footprint_kgCO2e_per_kWh)}</b>`)}
+        ${row("Recycled content", escapeHtml(su.recycled_content))}
+        ${row("Responsible sourcing", su.responsible_sourcing_url ? `<a href="${escapeHtml(su.responsible_sourcing_url)}" target="_blank" rel="noopener">Open report (demo)</a>` : "-")}
+        ${row("Notes", escapeHtml(su.notes || "-"))}
+      </div>
+    `);
+
+    // CIRCULARITY (public) — basit MVP
+    document.getElementById("section_circularity").innerHTML = card("Circularity (Public)", `
+      <div class="kv">
+        ${row("End-of-life guidance", "Collection and recycling information should be provided by market/region (prototype note).")}
+        ${row("Disassembly details", "Professional access required (demo).")}
+      </div>
+    `);
+
+    // DOCUMENTS (public)
+    const docs = p.public.documents || [];
+    const docList = docs.length
+      ? `<ul style="margin:0; padding-left: 18px; color: var(--text)">${docs.map(d=>`<li><a href="${escapeHtml(d.url)}" target="_blank" rel="noopener">${escapeHtml(d.title)}</a></li>`).join("")}</ul>`
+      : `<div class="note">No public documents in this demo.</div>`;
+    document.getElementById("section_documents").innerHTML = card("Documents (Public)", docList);
+
+    // ACCESS (role switch + role content)
+    const accessHtml = `
+      <div class="kv">
+        ${row("Current role", pill(role))}
+        ${row("Switch role (demo)", `
+          <div class="status">
+            <button class="btn" id="goPublic">Public</button>
+            <button class="btn primary" id="goPro">Professional</button>
+            <button class="btn" id="goAuth">Authority</button>
+          </div>
+        `)}
+      </div>
+
+      <div class="note">
+        Bu demo’da rol değişimi serbesttir. Gerçek sistemde Professional/Authority erişimi login + yetkilendirme ile kontrol edilir.
+      </div>
+    `;
+    document.getElementById("section_access").innerHTML = card("Professional Access", accessHtml);
+
+    // Professional content
+    if(role === "professional"){
+      const pr = p.professional;
+      contentEl.innerHTML += card("Professional View (demo)", `
         <div class="kv">
-          ${row("detailed_composition", escapeHtml(r.detailed_composition))}
-          ${row("dismantling", escapeHtml(r.dismantling))}
-          ${row("spare_parts", (r.spare_parts||[]).map(x=>`<span class="pill">${escapeHtml(x)}</span>`).join(" "))}
+          ${row("Dismantling — safety measures", (pr.dismantling.safety_measures||[]).map(x=>pill(x)).join(" "))}
+          ${row("Dismantling — tools required", (pr.dismantling.tools_required||[]).map(x=>pill(x)).join(" "))}
+          ${row("Disassembly reference", `<a href="${escapeHtml(pr.dismantling.disassembly_sequence_ref)}" target="_blank" rel="noopener">Open (demo)</a>`)}
+          ${row("Spare parts", (pr.spare_parts||[]).map(x=>`${pill(x.part_no)} ${escapeHtml(x.description)}`).join("<br/>"))}
         </div>
-        <div class="note">Not: Üretim ortamında bu alanlar kimlik doğrulama + yetkilendirme ile servis edilmelidir.</div>
-      `);
+      `, badge("Restricted (demo)", "warn"));
     }
 
-    // Authorities + Individual
-    if(role === "authorities"){
-      const a = p.restricted_model_authorities;
-      const i = p.restricted_individual;
+    // Authority content
+    if(role === "authority"){
+      const au = p.authority;
+      const ind = au.individual_battery;
 
-      contentEl.innerHTML += makeCard("Restricted — Authorities / NB (demo)", `
-        <div class="kv">
-          ${row("test_reports", (a.test_reports||[]).map(x=>`<span class="pill">${escapeHtml(x)}</span>`).join(" "))}
-        </div>
-      `);
-
-      // Simple health indicator (demo)
-      const soh = Number(i.soh_pct);
+      const soh = Number(ind.soh_pct);
       const lvl = soh >= 90 ? "good" : (soh >= 80 ? "warn" : "bad");
 
-      contentEl.innerHTML += makeCard("Restricted — Individual battery (demo)", `
+      contentEl.innerHTML += card("Authority / NB View (demo)", `
         <div class="kv">
-          ${row("serial_no", escapeHtml(i.serial_no))}
-          ${row("battery_status", `<span class="pill">${escapeHtml(i.battery_status)}</span>`)}
-          ${row("put_into_service_date", escapeHtml(i.put_into_service_date))}
-          ${row("SoH (%)", `<b>${escapeHtml(i.soh_pct)}</b>`)}
-          ${row("charge_cycles", escapeHtml(i.charge_cycles))}
-          ${row("avg_operating_temp (°C)", escapeHtml(i.avg_operating_temp_C))}
+          ${row("Conformity evidence", (au.conformity_evidence||[]).map(r=>`<a href="${escapeHtml(r.url)}" target="_blank" rel="noopener">${escapeHtml(r.report_id)} — ${escapeHtml(r.title)}</a>`).join("<br/>"))}
         </div>
-        <div class="status">
-          ${statusBadge("SoH indicator","" + lvl)}
+      `, badge("Restricted (demo)", "warn"));
+
+      contentEl.innerHTML += card("Individual Battery (demo)", `
+        <div class="kv">
+          ${row("Serial No", escapeHtml(ind.serial_no))}
+          ${row("Status", pill(ind.status))}
+          ${row("Put into service", escapeHtml(ind.put_into_service_date))}
+          ${row("SoH (%)", `<b>${escapeHtml(ind.soh_pct)}</b> ${badge("SoH indicator", lvl)}`)}
+          ${row("Charge cycles", escapeHtml(ind.charge_cycles))}
+          ${row("Avg operating temp (°C)", escapeHtml(ind.avg_operating_temp_C))}
         </div>
       `);
     }
 
-    // Raw JSON (collapsed)
-    contentEl.innerHTML += makeCard("Ek — Ham veri (opsiyonel)", `
+    // Optional raw data (collapsed)
+    contentEl.innerHTML += card("Ek — Ham kayıt (opsiyonel)", `
       <details>
         <summary>Ham kaydı görüntüle</summary>
         <pre>${escapeHtml(JSON.stringify(p, null, 2))}</pre>
       </details>
-      <div class="note">Bu bölüm tezde zorunlu değil; sadece “veri kaydı” mantığını göstermek için opsiyoneldir.</div>
     `);
+
+    // Section tab behavior
+    const sectionTabs = document.getElementById("sectionTabs");
+    sectionTabs.addEventListener("click", (e)=>{
+      const t = e.target.closest(".tab");
+      if(!t) return;
+      [...sectionTabs.querySelectorAll(".tab")].forEach(x=>x.classList.remove("active"));
+      t.classList.add("active");
+
+      const id = t.dataset.section;
+      ["details","sustainability","circularity","documents","access"].forEach(k=>{
+        const el = document.getElementById("section_"+k);
+        if(el) el.style.display = (k===id) ? "" : "none";
+      });
+    });
+
+    // Role switch buttons (demo)
+    document.getElementById("goPublic").onclick = ()=> window.location.href = buildLink(uid, "public");
+    document.getElementById("goPro").onclick    = ()=> window.location.href = buildLink(uid, "professional");
+    document.getElementById("goAuth").onclick   = ()=> window.location.href = buildLink(uid, "authority");
   }
 
-  // =========================
-  // Init
-  // =========================
-  // Clean mode
-  if(qs.get("mode") === "clean"){
-    document.body.classList.add("clean");
-  }
+  // =========================================================
+  // 4) Init
+  // =========================================================
+  if(qs.get("mode") === "clean") document.body.classList.add("clean");
 
-  // Populate preset dropdown
+  // Populate demo presets
   const uids = Object.keys(PASSPORTS);
   for(const uid of uids){
     const opt = document.createElement("option");
     opt.value = uid;
-    opt.textContent = uid.includes(".CN.") ? "Demo — Çin (CN)" : "Demo — AB (EU)";
+    opt.textContent = uid.includes(".CN.") ? "Demo — China (CN)" : "Demo — EU (EU)";
     presetEl.appendChild(opt);
   }
 
-  const uidFromUrl = qs.get("uid") || uids[0];
+  const uidFromUrl  = qs.get("uid")  || uids[0];
   const roleFromUrl = qs.get("role") || "public";
 
   uidEl.value = uidFromUrl;
   setActiveRole(roleFromUrl);
-
-  // Render first
   render(uidFromUrl, roleFromUrl);
 
-  // =========================
-  // Events
-  // =========================
-  // Role tabs
+  // Role tabs (top)
   roleTabs.addEventListener("click", (e)=>{
     const tab = e.target.closest(".tab");
     if(!tab) return;
@@ -547,36 +661,28 @@
     window.location.href = buildLink(uidEl.value.trim(), role);
   });
 
-  // Preset change
+  // Preset dropdown
   presetEl.addEventListener("change", ()=>{
     if(!presetEl.value) return;
     uidEl.value = presetEl.value;
   });
 
-  // Open
+  // Buttons
   document.getElementById("open").addEventListener("click", ()=>{
     const uid = uidEl.value.trim();
     const role = roleTabs.querySelector(".tab.active")?.dataset.role || "public";
     window.location.href = buildLink(uid, role);
   });
 
-  // Copy link
   document.getElementById("copy").addEventListener("click", async ()=>{
     const uid = uidEl.value.trim();
     const role = roleTabs.querySelector(".tab.active")?.dataset.role || "public";
     const link = buildLink(uid, role);
-    try{
-      await navigator.clipboard.writeText(link);
-      alert("Link kopyalandı:\n" + link);
-    }catch{
-      prompt("Kopyalamak için:", link);
-    }
+    try{ await navigator.clipboard.writeText(link); alert("Kopyalandı:\n" + link); }
+    catch{ prompt("Kopyalamak için:", link); }
   });
 
-  // Print/PDF
-  document.getElementById("print").addEventListener("click", ()=>{
-    window.print();
-  });
+  document.getElementById("print").addEventListener("click", ()=> window.print());
 </script>
 </body>
 </html>
