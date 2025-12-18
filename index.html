@@ -9,6 +9,7 @@
   <style>
     :root{
       --bg:#0a0f1b;
+      --glass: rgba(255,255,255,.06);
       --line: rgba(255,255,255,.10);
       --line2: rgba(120,160,255,.16);
       --text:#e9f0ff;
@@ -24,6 +25,7 @@
     @media (prefers-color-scheme: light){
       :root{
         --bg:#f3f6ff;
+        --glass: rgba(17,24,39,.04);
         --line: rgba(17,24,39,.10);
         --line2: rgba(30,64,175,.14);
         --text:#0c1428;
@@ -86,7 +88,10 @@
       background: linear-gradient(180deg, rgba(0,0,0,.18), transparent);
       backdrop-filter: blur(10px);
     }
-    .brand{ display:flex; align-items:center; gap: 12px; min-width: 220px; }
+    .brand{
+      display:flex; align-items:center; gap: 12px;
+      min-width: 220px;
+    }
     .avatar{
       width: 34px; height: 34px; border-radius: 12px;
       border: 1px solid var(--line);
@@ -199,8 +204,9 @@
       background: rgba(103,199,255,.08);
       display:flex; align-items:center; justify-content:center;
     }
-
     .list{ display:flex; flex-direction:column; gap: 10px; }
+    .item{ display:flex; align-items:flex-start; gap: 10px; color: var(--muted); }
+    .item b{ color: var(--text); font-weight: 900; }
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
     .inlineLink{ display:flex; align-items:center; gap: 8px; flex-wrap:wrap; word-break: break-word; }
     .iconBtn{
@@ -214,28 +220,6 @@
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
     }
-
-    /* Stronger icons */
-    .ico{
-      width: 22px; height: 22px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,.05);
-      box-shadow: 0 10px 26px rgba(0,0,0,.22);
-      flex: 0 0 auto;
-    }
-    .ico svg{ width: 16px; height: 16px; opacity: 1; }
-    .item{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      color: var(--muted);
-    }
-    .item .label{ min-width: 120px; color: var(--muted2); }
-    .item .value{ color: var(--text); }
 
     /* Tabs */
     .tabsShell{
@@ -257,9 +241,6 @@
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       background: rgba(0,0,0,.06);
-      position: sticky;
-      top: 0;
-      z-index: 5;
     }
     .tabs::-webkit-scrollbar{ display:none; }
 
@@ -273,11 +254,7 @@
       white-space: nowrap;
       flex: 0 0 auto;
       border: 1px solid transparent;
-      display:flex;
-      align-items:center;
-      gap:10px;
     }
-    .tab svg{ width: 16px; height: 16px; opacity: 1; }
     .tab.active{
       color: var(--blue);
       font-weight: 950;
@@ -363,27 +340,43 @@
       transform: translateX(-50%) translateY(-6px);
     }
 
+    /* === MOBILE BREAKPOINTS === */
     @media (max-width: 920px){
       .grid2{ grid-template-columns: 1fr; }
       .cols2{ grid-template-columns: 1fr; }
     }
     @media (max-width: 600px){
       .wrap{ padding: 14px 10px 44px; }
-      .header{ flex-direction: column; align-items: stretch; gap: 10px; }
+      .header{
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+      }
       .brand{ min-width: 0; }
       .title{ white-space: normal; }
       .topright{ width:100%; justify-content: stretch; }
-      .btn{ width:100%; justify-content:center; padding: 12px 14px; }
+      .btn{
+        width:100%;
+        justify-content:center;
+        padding: 12px 14px;
+      }
       .content{ padding: 12px 12px 14px; }
       .subline{ padding: 10px 12px 0; }
       .overviewWrap{ grid-template-columns: 1fr; }
       .bigIcon{ width: 78px; height: 78px; }
       .kv{ grid-template-columns: 1fr; }
-      .item .label{ min-width: 0; }
+      .tabs{ position: sticky; top: 0; z-index: 5; }
     }
 
+    /* Clean mode for thesis screenshots */
     .clean .header,
     .clean .subline { display:none !important; }
+
+    @media print{
+      body{ background:#fff !important; }
+      .shell{ box-shadow:none !important; }
+      .header, .subline{ display:none !important; }
+    }
 
     .svg{ width: 26px; height: 26px; opacity: .95; }
     .svgSmall{ width: 18px; height: 18px; opacity: .95; }
@@ -416,6 +409,9 @@
   <div class="toast" id="toast">Kopyalandı</div>
 
 <script>
+  // ---------------------------------------------------------
+  // DATA (örnek içerik; senin tez verilerinle genişletilebilir)
+  // ---------------------------------------------------------
   const DB = {
     "urn:iso:15459:DPPBAT.CN.EV.2026.000001": {
       overview: {
@@ -426,7 +422,7 @@
         production: "December 2026"
       },
       safety: {
-        hazardous: "Declared\\nCobalt, Nickel as REACH ≥ 0.1%",
+        hazardous: "Declared\nCobalt, Nickel as REACH ≥ 0.1%",
         extinguishing: "Water mist, Class D media, BC powder"
       },
       sustainability: {
@@ -461,7 +457,7 @@
         production: "December 2026"
       },
       safety: {
-        hazardous: "Declared\\nNickel as REACH ≥ 0.1%",
+        hazardous: "Declared\nNickel as REACH ≥ 0.1%",
         extinguishing: "Water mist, Class D media, BC powder"
       },
       sustainability: {
@@ -488,10 +484,13 @@
     }
   };
 
+  // ---------------------------------------------------------
+  // URL params
+  // ---------------------------------------------------------
   const qs = new URLSearchParams(location.search);
   const uid = qs.get("uid") || Object.keys(DB)[0];
-  const role = (qs.get("role") || "public").toLowerCase();
-  const tab  = (qs.get("tab")  || "details").toLowerCase();
+  const role = (qs.get("role") || "public").toLowerCase(); // public|professional|authority
+  const tab  = (qs.get("tab")  || "details").toLowerCase(); // details|sustainability|circularity|documents|access
 
   if(qs.get("mode")==="clean") document.body.classList.add("clean");
 
@@ -516,11 +515,17 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(()=> toast.classList.remove("show"), 1400);
   }
+
   async function copy(text){
-    try{ await navigator.clipboard.writeText(text); showToast("Kopyalandı"); }
-    catch{ prompt("Kopyalamak için:", text); }
+    try{
+      await navigator.clipboard.writeText(text);
+      showToast("Kopyalandı");
+    }catch{
+      prompt("Kopyalamak için:", text);
+    }
   }
 
+  // SVG icons
   const ICONS = {
     doc: `<svg class="svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -534,54 +539,14 @@
     </svg>`,
     clip: `<svg class="svgSmall" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l9.9-9.9a3.5 3.5 0 0 1 4.95 4.95l-10.6 10.6a2 2 0 1 1-2.83-2.83l9.9-9.9"/>
-    </svg>`,
-    info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
-    </svg>`,
-    leaf: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M11 20c6 0 10-4 10-10V4s-6 0-10 4-4 10-4 10 1 2 4 2z"/>
-      <path d="M21 4L11 14"/>
-    </svg>`,
-    recycle: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M7 19l-2-3 3-2"/><path d="M3 16h6"/>
-      <path d="M7 5l2 3-3 2"/><path d="M9 8H3"/>
-      <path d="M17 19l-2 3-3-2"/><path d="M21 16h-6"/>
-      <path d="M17 5l2-3 3 2"/><path d="M15 8h6"/>
-    </svg>`,
-    file: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-      <path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/>
-    </svg>`,
-    key: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M21 2l-2 2m-7.5 7.5a4.5 4.5 0 1 1 6.36 6.36L14 22l-4-4 1.5-1.5 2 2L16 16l-2-2 1.5-1.5 2 2 1.36-1.36"/>
-    </svg>`,
-    tag: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M20.59 13.41L11 23 1 13V3h10l9.59 10.41z"/><path d="M7 7h.01"/>
-    </svg>`,
-    factory: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M3 21V8l6 4V8l6 4V8l6 4v9H3z"/><path d="M7 21v-3"/><path d="M11 21v-5"/><path d="M15 21v-4"/>
-    </svg>`,
-    pin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M12 22s8-4 8-10a8 8 0 1 0-16 0c0 6 8 10 8 10z"/><circle cx="12" cy="12" r="3"/>
-    </svg>`,
-    calendar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M8 2v4"/><path d="M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/>
-      <path d="M3 10h18"/>
-    </svg>`,
-    alert: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-      <path d="M12 9v4"/><path d="M12 17h.01"/>
-    </svg>`,
-    fire: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M12 22c4 0 7-3 7-7 0-2-1-4-3-5 0 2-1 3-2 4 0-3-2-6-5-8 0 4-3 5-3 9 0 4 3 7 6 7z"/>
     </svg>`
   };
 
   const app = document.getElementById("app");
   const data = DB[uid];
 
-  function tabBtn(name, key, icon){
-    return `<div class="tab ${tab===key?'active':''}" data-tab="${key}">${icon}<span>${name}</span></div>`;
+  function tabBtn(name, key){
+    return `<div class="tab ${tab===key?'active':''}" data-tab="${key}">${name}</div>`;
   }
 
   function renderNotFound(){
@@ -605,7 +570,7 @@
       tabBody.innerHTML = `
         <div class="cols2">
           <div class="miniCard">
-            <div class="miniHead">${ICONS.info} Details</div>
+            <div class="miniHead">${ICONS.battery} Details</div>
             <div class="miniBody">
               ${viewChip()}
               <div style="height:10px"></div>
@@ -643,7 +608,7 @@
       tabBody.innerHTML = `
         <div class="cols2">
           <div class="miniCard">
-            <div class="miniHead">${ICONS.leaf} Sustainability</div>
+            <div class="miniHead">${ICONS.doc} Sustainability</div>
             <div class="miniBody">
               ${viewChip()}
               <div style="height:12px"></div>
@@ -661,7 +626,7 @@
           </div>
 
           <div class="miniCard">
-            <div class="miniHead">${ICONS.tag} Responsible sourcing</div>
+            <div class="miniHead">${ICONS.doc} Responsible sourcing</div>
             <div class="miniBody">
               <div class="kv">
                 <div class="k">Due diligence</div>
@@ -679,7 +644,7 @@
     if(tab === "circularity"){
       tabBody.innerHTML = `
         <div class="miniCard">
-          <div class="miniHead">${ICONS.recycle} Circularity</div>
+          <div class="miniHead">${ICONS.doc} Circularity</div>
           <div class="miniBody">
             <div class="kv">
               <div class="k">Collection</div>
@@ -699,7 +664,7 @@
       const list = (d.documents||[]).map(x=>`<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a></li>`).join("");
       tabBody.innerHTML = `
         <div class="miniCard">
-          <div class="miniHead">${ICONS.file} Documents</div>
+          <div class="miniHead">${ICONS.doc} Documents</div>
           <div class="miniBody">
             <ul style="margin:0; padding-left:18px;">${list || "<li>No public documents</li>"}</ul>
           </div>
@@ -708,10 +673,11 @@
       return;
     }
 
+    // access
     const restricted = (role !== "professional" && role !== "authority");
     tabBody.innerHTML = `
       <div class="miniCard">
-        <div class="miniHead">${ICONS.key} Access</div>
+        <div class="miniHead">${ICONS.doc} Access</div>
         <div class="miniBody">
           ${viewChip()}
           <div style="height:12px"></div>
@@ -738,6 +704,7 @@
   function render(){
     if(!data){ renderNotFound(); return; }
 
+    // ✅ İSTEDİĞİN DÜZELTME: "Battery Passport Overview" yerine "DPP-Battery Passport"
     const overview = `
       <div class="card">
         <div class="head">${ICONS.doc} DPP-Battery Passport</div>
@@ -746,57 +713,33 @@
             <div class="bigIcon" aria-hidden="true">${ICONS.battery}</div>
             <div class="list">
               <div class="item">
-                <span class="ico">${ICONS.info}</span>
-                <span class="label">UID</span>
-                <span class="value inlineLink">
+                <span class="k">UID:</span>
+                <span class="v inlineLink">
                   <b class="mono">${esc(data.overview.uid)}</b>
                   <span class="iconBtn" id="copyUid" title="Copy UID">${ICONS.clip}</span>
                 </span>
               </div>
-
-              <div class="item">
-                <span class="ico">${ICONS.tag}</span>
-                <span class="label">Type</span>
-                <span class="value">${esc(data.overview.category)}</span>
-              </div>
-
-              <div class="item">
-                <span class="ico">${ICONS.factory}</span>
-                <span class="label">Manufacturer</span>
-                <span class="value">${esc(data.overview.manufacturer)}</span>
-              </div>
-
-              <div class="item">
-                <span class="ico">${ICONS.pin}</span>
-                <span class="label">Site</span>
-                <span class="value">${esc(data.overview.site)}</span>
-              </div>
-
-              <div class="item">
-                <span class="ico">${ICONS.calendar}</span>
-                <span class="label">Production date</span>
-                <span class="value">${esc(data.overview.production)}</span>
-              </div>
+              <div class="item"><span class="k">Type</span><span class="v">${esc(data.overview.category)}</span></div>
+              <div class="item"><span class="k">Manufacturer</span><span class="v">${esc(data.overview.manufacturer)}</span></div>
+              <div class="item"><span class="k">Site</span><span class="v">${esc(data.overview.site)}</span></div>
+              <div class="item"><span class="k">Production date</span><span class="v">${esc(data.overview.production)}</span></div>
             </div>
           </div>
         </div>
       </div>
     `;
 
+    // ✅ İSTEDİĞİN DÜZELTME: "Safety Snapshot" yerine "Safety"
     const safety = `
       <div class="card">
         <div class="head">${ICONS.shield} Safety</div>
         <div class="body">
-          <div style="display:flex;align-items:center;gap:10px;font-weight:950;color:var(--text);margin-bottom:6px;">
-            <span class="ico">${ICONS.alert}</span> Hazardous substances
-          </div>
+          <div style="font-weight:950; color:var(--text); margin-bottom:6px;">Hazardous substances</div>
           <div style="white-space:pre-line;">${esc(data.safety.hazardous)}</div>
 
           <div style="height:12px"></div>
 
-          <div style="display:flex;align-items:center;gap:10px;font-weight:950;color:var(--text);margin-bottom:6px;">
-            <span class="ico">${ICONS.fire}</span> Extinguishing agent
-          </div>
+          <div style="font-weight:950; color:var(--text); margin-bottom:6px;">Extinguishing agent</div>
           <div style="color:var(--teal); font-weight:900;">${esc(data.safety.extinguishing)}</div>
         </div>
       </div>
@@ -805,11 +748,11 @@
     const tabs = `
       <div class="tabsShell">
         <div class="tabs" id="tabs">
-          ${tabBtn("Details","details", ICONS.info)}
-          ${tabBtn("Sustainability","sustainability", ICONS.leaf)}
-          ${tabBtn("Circularity","circularity", ICONS.recycle)}
-          ${tabBtn("Documents","documents", ICONS.file)}
-          ${tabBtn("Access","access", ICONS.key)}
+          ${tabBtn("Details","details")}
+          ${tabBtn("Sustainability","sustainability")}
+          ${tabBtn("Circularity","circularity")}
+          ${tabBtn("Documents","documents")}
+          ${tabBtn("Access","access")}
         </div>
         <div class="tabsBody" id="tabBody"></div>
       </div>
@@ -832,6 +775,7 @@
 
   render();
 
+  // header buttons
   document.getElementById("copyLink").onclick = ()=> copy(location.href);
   document.getElementById("goAccess").onclick = ()=> location.href = linkFor({ tab:"access", role: (role==="public" ? "professional" : role) });
 </script>
