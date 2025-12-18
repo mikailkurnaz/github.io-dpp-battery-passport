@@ -3,79 +3,285 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DPP Battery Passport — Demo Viewer</title>
+  <meta name="color-scheme" content="dark light">
+  <title>DPP Battery Passport — Viewer (Demo)</title>
+
   <style>
-    :root { --bg:#0b1220; --card:#111b2e; --muted:#a7b0c0; --text:#e9eef7; --line:#23314d; }
-    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:var(--bg); color:var(--text); }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 22px 16px 60px; }
-    .top { display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
-    .brand { display:flex; gap:10px; align-items:center; }
-    .dot { width:10px; height:10px; border-radius:999px; background:#5dd6ff; box-shadow:0 0 18px rgba(93,214,255,.5); }
-    h1 { font-size: 18px; margin:0; letter-spacing:.2px; }
-    .sub { color:var(--muted); font-size: 13px; margin-top:4px; }
-    .bar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    input, select, button {
-      border:1px solid var(--line); background:#0f172a; color:var(--text);
-      border-radius:12px; padding:10px 12px; font-size: 14px;
+    :root{
+      --bg:#0b1220;
+      --surface:#0f172a;
+      --card:#111c33;
+      --card2:#0f1a30;
+      --line:#22314f;
+      --text:#eaf1ff;
+      --muted:#9fb0cc;
+      --brand:#5dd6ff;
+      --good:#2be4a7;
+      --warn:#ffcc66;
+      --bad:#ff5d7a;
+      --shadow: 0 12px 35px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 14px;
+      --pad: 14px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
     }
-    button { cursor:pointer; }
-    .grid { display:grid; grid-template-columns: 1fr; gap: 12px; margin-top:16px; }
-    .card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:14px; }
-    .card h2 { font-size: 14px; margin:0 0 10px; color:#cfe2ff; }
-    .kv { display:grid; grid-template-columns: 220px 1fr; gap: 8px 12px; font-size: 13px; }
-    .k { color: var(--muted); }
-    .pill { display:inline-block; padding: 4px 10px; border:1px solid var(--line); border-radius:999px; font-size:12px; color:var(--muted); }
-    .links a { color:#5dd6ff; text-decoration:none; }
-    .links a:hover { text-decoration:underline; }
-    .note { font-size: 12px; color: var(--muted); line-height:1.45; }
-    .list a { color:#5dd6ff; }
-    .err { border-color:#ff5d7a; }
-    .ok  { border-color:#2be4a7; }
-    pre { background:#0f172a; border:1px solid var(--line); border-radius:14px; padding:12px; overflow:auto; font-size:12px; }
+
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f6f8ff;
+        --surface:#ffffff;
+        --card:#ffffff;
+        --card2:#f6f8ff;
+        --line:#dde4f3;
+        --text:#0c1428;
+        --muted:#5e6a83;
+        --shadow: 0 14px 40px rgba(15, 23, 42, .12);
+      }
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family:var(--font);
+      background: radial-gradient(1200px 700px at 20% -10%, rgba(93,214,255,.18), transparent 60%),
+                  radial-gradient(900px 600px at 95% 0%, rgba(43,228,167,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    a{ color: var(--brand); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+
+    .wrap{ max-width: 1060px; margin: 0 auto; padding: 22px 16px 60px; }
+    .top{
+      display:flex; align-items:flex-start; justify-content:space-between;
+      gap:14px; flex-wrap:wrap;
+      padding: 14px 14px 16px;
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), transparent);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .brand{
+      display:flex; gap:12px; align-items:flex-start;
+      min-width: 280px;
+    }
+    .logo{
+      width:38px; height:38px; border-radius: 14px;
+      background: radial-gradient(circle at 30% 30%, rgba(93,214,255,.9), rgba(93,214,255,.25) 55%, transparent 70%),
+                  radial-gradient(circle at 70% 70%, rgba(43,228,167,.9), rgba(43,228,167,.18) 58%, transparent 72%),
+                  rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    h1{ margin:0; font-size: 16px; letter-spacing:.2px; }
+    .sub{ margin-top:6px; color:var(--muted); font-size: 12.5px; line-height:1.35; max-width: 540px; }
+
+    .controls{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end;
+    }
+
+    .field{
+      display:flex; gap:8px; align-items:center;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius: 14px;
+    }
+    .field label{ font-size:12px; color:var(--muted); }
+    .field input, .field select{
+      border:0; outline:0; background: transparent; color:var(--text);
+      font-size: 14px; min-width: 240px;
+    }
+    .field select{ min-width: 160px; cursor:pointer; }
+    .btn{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      border-radius: 14px;
+      padding:10px 12px;
+      font-size: 14px;
+      cursor:pointer;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+      display:inline-flex; gap:8px; align-items:center;
+    }
+    .btn:hover{ background: rgba(255,255,255,.07); border-color: rgba(93,214,255,.35); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: rgba(93,214,255,.12);
+      border-color: rgba(93,214,255,.45);
+    }
+
+    .grid{ display:grid; grid-template-columns: 1fr; gap: 12px; margin-top:14px; }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), transparent 40%), var(--card);
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      padding: var(--pad);
+      box-shadow: var(--shadow);
+    }
+
+    .card h2{
+      margin:0 0 10px;
+      font-size: 13px;
+      letter-spacing: .25px;
+      color: rgba(93,214,255,.95);
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .pill{
+      display:inline-flex; gap:6px; align-items:center;
+      padding: 5px 10px;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+      background: rgba(255,255,255,.03);
+      white-space: nowrap;
+    }
+    .dot{ width:7px; height:7px; border-radius:999px; background: var(--brand); box-shadow: 0 0 14px rgba(93,214,255,.35); }
+
+    .kv{
+      display:grid;
+      grid-template-columns: 230px 1fr;
+      gap: 8px 12px;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .k{ color: var(--muted); }
+    .v{ color: var(--text); }
+    @media (max-width: 700px){
+      .kv{ grid-template-columns: 1fr; }
+      .field input{ min-width: 160px; }
+    }
+
+    .tabs{
+      display:flex; gap:8px; flex-wrap:wrap; margin: 6px 0 0;
+    }
+    .tab{
+      padding:8px 10px;
+      border:1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      cursor:pointer;
+      font-size: 13px;
+      user-select:none;
+    }
+    .tab.active{
+      color: var(--text);
+      border-color: rgba(93,214,255,.55);
+      background: rgba(93,214,255,.12);
+    }
+
+    details{
+      border:1px solid var(--line);
+      border-radius: var(--radius2);
+      background: rgba(255,255,255,.02);
+      padding: 10px 12px;
+    }
+    summary{ cursor:pointer; color: var(--text); font-size: 13px; }
+    summary::marker{ color: var(--muted); }
+    .note{ margin-top:10px; color: var(--muted); font-size: 12.5px; line-height:1.45; }
+
+    pre{
+      margin: 10px 0 0;
+      background: var(--surface);
+      border:1px solid var(--line);
+      border-radius: var(--radius2);
+      padding: 12px;
+      overflow:auto;
+      font-size: 12px;
+    }
+
+    .status{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      margin-top: 8px;
+    }
+    .badge{
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      display:inline-flex; align-items:center; gap:7px;
+    }
+    .badge.good{ border-color: rgba(43,228,167,.45); background: rgba(43,228,167,.10); color: var(--text); }
+    .badge.warn{ border-color: rgba(255,204,102,.55); background: rgba(255,204,102,.12); color: var(--text); }
+    .badge.bad{  border-color: rgba(255,93,122,.55); background: rgba(255,93,122,.12); color: var(--text); }
+    .mini{
+      width:10px; height:10px; border-radius:3px; background: var(--muted);
+    }
+
+    /* Clean mode for thesis screenshots */
+    .clean .top, .clean .helper { display:none !important; }
+    .clean .wrap{ padding-top: 12px; }
+    .helper{ margin-top: 12px; }
+
+    /* Print-friendly */
+    @media print{
+      body{ background:#fff !important; color:#000 !important; }
+      .top, .helper{ display:none !important; }
+      .card{ box-shadow:none !important; border-color:#ddd !important; }
+      a{ color:#000 !important; text-decoration:none !important; }
+    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-    <div class="top">
+    <div class="top" id="topbar">
       <div class="brand">
-        <div class="dot"></div>
+        <div class="logo" aria-hidden="true"></div>
         <div>
-          <h1>DPP Battery Passport — Demo Viewer</h1>
-          <div class="sub">GitHub Pages üzerinde statik demo (tez için). “Restricted” veriler gerçek hayatta kimlik doğrulama ister.</div>
+          <h1>DPP Battery Passport — Viewer (Demo)</h1>
+          <div class="sub">
+            QR ile erişilen pasaport içeriği, <b>Public / Legitimate interest / Authorities</b> görünümleriyle gösterilir.
+            Bu sayfa tez için <b>prototip</b> amaçlıdır.
+          </div>
+
+          <div class="tabs" id="roleTabs" aria-label="Role tabs">
+            <div class="tab" data-role="public">Public</div>
+            <div class="tab" data-role="legitimate_interest">Legitimate interest</div>
+            <div class="tab" data-role="authorities">Authorities / NB</div>
+          </div>
         </div>
       </div>
 
-      <div class="bar">
-        <input id="uid" size="44" placeholder="uid=urn:iso:15459:..." />
-        <select id="role">
-          <option value="public">Public</option>
-          <option value="legitimate_interest">Legitimate interest (demo)</option>
-          <option value="authorities">Authorities/NB (demo)</option>
-        </select>
-        <button id="go">Görüntüle</button>
-        <button id="copy">Linki kopyala</button>
+      <div class="controls">
+        <div class="field" title="UID">
+          <label>UID</label>
+          <input id="uid" placeholder="urn:iso:15459:..." />
+        </div>
+
+        <div class="field" title="Demo seçim">
+          <label>Demo</label>
+          <select id="preset">
+            <option value="">Seç…</option>
+          </select>
+        </div>
+
+        <button class="btn primary" id="open">Görüntüle</button>
+        <button class="btn" id="copy">Link kopyala</button>
+        <button class="btn" id="print">PDF / Yazdır</button>
       </div>
     </div>
 
     <div class="grid" id="content"></div>
 
-    <div class="card">
-      <h2>Hızlı deneme linkleri</h2>
-      <div class="note list" id="quicklinks"></div>
-    </div>
-
-    <div class="card">
-      <h2>Güvenlik notu</h2>
+    <div class="helper card">
+      <h2>Tez için hızlı ipuçları <span class="pill"><span class="dot"></span> Screenshot</span></h2>
       <div class="note">
-        GitHub Pages herkese açık statik yayın yapar. Bu yüzden “restricted” alanlara gerçek tedarik zinciri / test raporu gibi gizli içerik koyma.
-        Tezde mimariyi anlatırken: Public içerik statik sayfada gösterilebilir; Restricted içerik için gerçek hayatta API + kimlik doğrulama (RBAC/ABAC) gerekir.
+        • “Temiz ekran” (üst bar gizli): URL sonuna <code>&mode=clean</code> ekle.<br/>
+        • Yazdır / PDF almak için “PDF / Yazdır” butonunu kullan.<br/>
+        • UID veya rol hatalıysa “Bulunamadı” ekranı çıkar (test senaryosu olarak yazılabilir).
       </div>
     </div>
   </div>
 
 <script>
-  // ====== DEMO DATA (temsili) ======
+  // =========================
+  // DEMO DATA (temsili)
+  // =========================
   const PASSPORTS = {
     "urn:iso:15459:DPPBAT.CN.EV.2026.000001": {
       passport_version: "1.0",
@@ -83,21 +289,21 @@
       public_model: {
         battery_type: "EV traction battery",
         model_id: "CN-EV-NMC-60kWh-2026",
-        manufacturer_name: "Shenzhen PowerCell Ltd.",
+        manufacturer: "Shenzhen PowerCell Ltd. (CN)",
         manufacturing_site: "Shenzhen, Guangdong (CN)",
-        chemistry: "Li-ion NMC 811 / Graphite",
+        chemistry: "Li-ion (NMC 811 / Graphite)",
         rated_energy_kWh: 60.0,
         voltage_min_nom_max_V: "300 / 355 / 403",
         rated_capacity_Ah: 170,
         expected_cycles_to_80pct: 1500,
         carbon_footprint_kgCO2e_per_kWh: 58.0,
-        recycled_content_pct: "Co 6 / Ni 5 / Li 2",
+        recycled_content: "Co 6% · Ni 5% · Li 2%",
         renewable_content_share_pct: 28
       },
       restricted_model_legitimate_interest: {
         detailed_composition: "Cathode: NMC 811 | Anode: Graphite | Electrolyte: LiPF6 in carbonates (illustrative)",
-        dismantling: "HV isolation + PPE required; see disassembly docs (demo)",
-        spare_parts: ["SP-HVCON-01", "SP-BMS-96S-02"]
+        dismantling: "HV isolation + PPE required; disassembly docs (demo).",
+        spare_parts: ["SP-HVCON-01","SP-BMS-96S-02"]
       },
       restricted_model_authorities: {
         test_reports: ["TR-CN-EV-2026-EMC-01 (demo)"]
@@ -107,7 +313,8 @@
         battery_status: "original",
         put_into_service_date: "2026-12-15",
         soh_pct: 98.4,
-        charge_cycles: 62
+        charge_cycles: 62,
+        avg_operating_temp_C: 26
       }
     },
 
@@ -117,21 +324,21 @@
       public_model: {
         battery_type: "EV traction battery",
         model_id: "EU-EV-NMC-60kWh-2026",
-        manufacturer_name: "EuroCell Energy S.A.",
+        manufacturer: "EuroCell Energy S.A. (EU)",
         manufacturing_site: "Wroclaw (PL)",
-        chemistry: "Li-ion NMC 622 / Graphite",
+        chemistry: "Li-ion (NMC 622 / Graphite)",
         rated_energy_kWh: 60.0,
         voltage_min_nom_max_V: "300 / 355 / 403",
         rated_capacity_Ah: 170,
         expected_cycles_to_80pct: 1700,
         carbon_footprint_kgCO2e_per_kWh: 41.5,
-        recycled_content_pct: "Co 10 / Ni 8 / Li 4",
+        recycled_content: "Co 10% · Ni 8% · Li 4%",
         renewable_content_share_pct: 66
       },
       restricted_model_legitimate_interest: {
         detailed_composition: "Cathode: NMC 622 | Anode: Graphite | Electrolyte: LiPF6 in carbonates (illustrative)",
-        dismantling: "HV isolation + thermal-runaway precautions (demo)",
-        spare_parts: ["SP-HVCON-01", "SP-BMS-96S-02"]
+        dismantling: "HV isolation + thermal-runaway precautions (demo).",
+        spare_parts: ["SP-HVCON-01","SP-BMS-96S-02"]
       },
       restricted_model_authorities: {
         test_reports: ["TR-EU-EV-2026-EMC-01 (demo)"]
@@ -141,147 +348,235 @@
         battery_status: "original",
         put_into_service_date: "2026-12-15",
         soh_pct: 99.1,
-        charge_cycles: 58
+        charge_cycles: 58,
+        avg_operating_temp_C: 24
       }
     }
   };
 
-  // ====== Helpers ======
+  // =========================
+  // Utilities
+  // =========================
   const qs = new URLSearchParams(window.location.search);
-  const uidInput = document.getElementById("uid");
-  const roleSel = document.getElementById("role");
-  const content = document.getElementById("content");
 
-  function row(k, v) {
-    return `<div class="k">${k}</div><div>${v ?? "-"}</div>`;
+  const uidEl = document.getElementById("uid");
+  const presetEl = document.getElementById("preset");
+  const contentEl = document.getElementById("content");
+  const roleTabs = document.getElementById("roleTabs");
+
+  function escapeHtml(s){
+    return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
   }
 
-  function card(title, innerHtml, cls="") {
-    return `<div class="card ${cls}"><h2>${title}</h2>${innerHtml}</div>`;
+  function row(k, v){
+    return `<div class="k">${escapeHtml(k)}</div><div class="v">${v ?? "-"}</div>`;
   }
 
-  function render(uid, role) {
-    content.innerHTML = "";
+  function pill(text){
+    return `<span class="pill"><span class="dot"></span>${escapeHtml(text)}</span>`;
+  }
+
+  function statusBadge(label, level){
+    return `<span class="badge ${level}"><span class="mini"></span>${escapeHtml(label)}</span>`;
+  }
+
+  function makeCard(title, bodyHtml, rightHtml=""){
+    return `
+      <div class="card">
+        <h2>${escapeHtml(title)} ${rightHtml}</h2>
+        ${bodyHtml}
+      </div>
+    `;
+  }
+
+  function currentBase(){
+    return window.location.origin + window.location.pathname;
+  }
+
+  function buildLink(uid, role){
+    const base = currentBase();
+    const p = new URLSearchParams();
+    p.set("uid", uid);
+    p.set("role", role);
+    if(qs.get("mode")==="clean") p.set("mode","clean");
+    return `${base}?${p.toString()}`;
+  }
+
+  function setActiveRole(role){
+    [...roleTabs.querySelectorAll(".tab")].forEach(t=>{
+      t.classList.toggle("active", t.dataset.role === role);
+    });
+  }
+
+  function render(uid, role){
+    contentEl.innerHTML = "";
+
     const p = PASSPORTS[uid];
-
-    if (!p) {
-      content.innerHTML = card("Bulunamadı", `
-        <div class="note">Bu UID için demo kayıt yok: <span class="pill">${uid}</span></div>
-        <div class="note">İpucu: Quick deneme linklerinden birini seç.</div>
-      `, "err");
+    if(!p){
+      contentEl.innerHTML = makeCard("Bulunamadı", `
+        <div class="note">Bu UID için demo kayıt yok:</div>
+        <div class="status">${pill(uid)}</div>
+        <div class="note">“Demo” menüsünden örnek bir UID seçebilirsin.</div>
+      `, statusBadge("UID not found","bad"));
       return;
     }
 
-    // Header card
-    content.innerHTML += card("Kimlik", `
+    // Header / Identity
+    contentEl.innerHTML += makeCard("Kimlik", `
       <div class="kv">
-        ${row("passport_version", p.passport_version)}
-        ${row("uid", `<span class="pill">${p.uid}</span>`)}
-        ${row("role (demo)", `<span class="pill">${role}</span>`)}
+        ${row("passport_version", escapeHtml(p.passport_version))}
+        ${row("uid", `<span class="pill">${escapeHtml(p.uid)}</span>`)}
+        ${row("role (demo)", `<span class="pill">${escapeHtml(role)}</span>`)}
+        ${row("shareable link", `<a href="${buildLink(uid, role)}">${escapeHtml(buildLink(uid, role))}</a>`)}
       </div>
-    `, "ok");
+    `, statusBadge("OK","good"));
 
-    // Public model
+    // Public model (always visible)
     const m = p.public_model;
-    content.innerHTML += card("Public — Model bilgileri", `
+    contentEl.innerHTML += makeCard("Public — Model bilgileri", `
       <div class="kv">
-        ${row("battery_type", m.battery_type)}
-        ${row("model_id", m.model_id)}
-        ${row("manufacturer", m.manufacturer_name)}
-        ${row("manufacturing_site", m.manufacturing_site)}
-        ${row("chemistry", m.chemistry)}
-        ${row("rated_energy_kWh", m.rated_energy_kWh)}
-        ${row("voltage (min/nom/max) V", m.voltage_min_nom_max_V)}
-        ${row("rated_capacity_Ah", m.rated_capacity_Ah)}
-        ${row("expected_cycles_to_80%", m.expected_cycles_to_80pct)}
-        ${row("carbon_footprint (kgCO2e/kWh)", m.carbon_footprint_kgCO2e_per_kWh)}
-        ${row("recycled_content (%)", m.recycled_content_pct)}
-        ${row("renewable_content_share (%)", m.renewable_content_share_pct)}
+        ${row("battery_type", escapeHtml(m.battery_type))}
+        ${row("model_id", escapeHtml(m.model_id))}
+        ${row("manufacturer", escapeHtml(m.manufacturer))}
+        ${row("manufacturing_site", escapeHtml(m.manufacturing_site))}
+        ${row("chemistry", escapeHtml(m.chemistry))}
+        ${row("rated_energy_kWh", escapeHtml(m.rated_energy_kWh))}
+        ${row("voltage (min/nom/max) V", escapeHtml(m.voltage_min_nom_max_V))}
+        ${row("rated_capacity_Ah", escapeHtml(m.rated_capacity_Ah))}
+        ${row("expected_cycles_to_80%", escapeHtml(m.expected_cycles_to_80pct))}
+        ${row("carbon_footprint (kgCO2e/kWh)", escapeHtml(m.carbon_footprint_kgCO2e_per_kWh))}
+        ${row("recycled_content", escapeHtml(m.recycled_content))}
+        ${row("renewable_content_share (%)", escapeHtml(m.renewable_content_share_pct))}
+      </div>
+
+      <div class="status">
+        ${statusBadge("Public view","good")}
+        ${role==="legitimate_interest" ? statusBadge("Restricted (LI) enabled","warn") : ""}
+        ${role==="authorities" ? statusBadge("Authorities enabled","warn") : ""}
       </div>
     `);
 
-    // Restricted (demo)
-    if (role === "legitimate_interest") {
+    // Legitimate interest
+    if(role === "legitimate_interest"){
       const r = p.restricted_model_legitimate_interest;
-      content.innerHTML += card("Restricted — Legitimate interest (demo)", `
+      contentEl.innerHTML += makeCard("Restricted — Legitimate interest (demo)", `
         <div class="kv">
-          ${row("detailed_composition", r.detailed_composition)}
-          ${row("dismantling", r.dismantling)}
-          ${row("spare_parts", (r.spare_parts || []).map(x=>`<span class="pill">${x}</span>`).join(" "))}
+          ${row("detailed_composition", escapeHtml(r.detailed_composition))}
+          ${row("dismantling", escapeHtml(r.dismantling))}
+          ${row("spare_parts", (r.spare_parts||[]).map(x=>`<span class="pill">${escapeHtml(x)}</span>`).join(" "))}
         </div>
-        <div class="note">Not: Bu alanlar gerçek hayatta kimlik doğrulama + yetkilendirme ile servis edilmelidir.</div>
+        <div class="note">Not: Üretim ortamında bu alanlar kimlik doğrulama + yetkilendirme ile servis edilmelidir.</div>
       `);
     }
 
-    if (role === "authorities") {
+    // Authorities + Individual
+    if(role === "authorities"){
       const a = p.restricted_model_authorities;
       const i = p.restricted_individual;
-      content.innerHTML += card("Restricted — Authorities/NB (demo)", `
+
+      contentEl.innerHTML += makeCard("Restricted — Authorities / NB (demo)", `
         <div class="kv">
-          ${row("test_reports", (a.test_reports || []).map(x=>`<span class="pill">${x}</span>`).join(" "))}
+          ${row("test_reports", (a.test_reports||[]).map(x=>`<span class="pill">${escapeHtml(x)}</span>`).join(" "))}
         </div>
       `);
 
-      content.innerHTML += card("Restricted — Individual battery (demo)", `
+      // Simple health indicator (demo)
+      const soh = Number(i.soh_pct);
+      const lvl = soh >= 90 ? "good" : (soh >= 80 ? "warn" : "bad");
+
+      contentEl.innerHTML += makeCard("Restricted — Individual battery (demo)", `
         <div class="kv">
-          ${row("serial_no", i.serial_no)}
-          ${row("battery_status", i.battery_status)}
-          ${row("put_into_service_date", i.put_into_service_date)}
-          ${row("SoH (%)", i.soh_pct)}
-          ${row("charge_cycles", i.charge_cycles)}
+          ${row("serial_no", escapeHtml(i.serial_no))}
+          ${row("battery_status", `<span class="pill">${escapeHtml(i.battery_status)}</span>`)}
+          ${row("put_into_service_date", escapeHtml(i.put_into_service_date))}
+          ${row("SoH (%)", `<b>${escapeHtml(i.soh_pct)}</b>`)}
+          ${row("charge_cycles", escapeHtml(i.charge_cycles))}
+          ${row("avg_operating_temp (°C)", escapeHtml(i.avg_operating_temp_C))}
+        </div>
+        <div class="status">
+          ${statusBadge("SoH indicator","" + lvl)}
         </div>
       `);
     }
 
-    // Raw JSON
-    content.innerHTML += card("Ham JSON (tez eki için)", `<pre>${escapeHtml(JSON.stringify(p, null, 2))}</pre>`);
+    // Raw JSON (collapsed)
+    contentEl.innerHTML += makeCard("Ek — Ham veri (opsiyonel)", `
+      <details>
+        <summary>Ham kaydı görüntüle</summary>
+        <pre>${escapeHtml(JSON.stringify(p, null, 2))}</pre>
+      </details>
+      <div class="note">Bu bölüm tezde zorunlu değil; sadece “veri kaydı” mantığını göstermek için opsiyoneldir.</div>
+    `);
   }
 
-  function escapeHtml(s) {
-    return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+  // =========================
+  // Init
+  // =========================
+  // Clean mode
+  if(qs.get("mode") === "clean"){
+    document.body.classList.add("clean");
   }
 
-  function currentLink(uid, role) {
-    const base = window.location.origin + window.location.pathname;
-    return `${base}?uid=${encodeURIComponent(uid)}&role=${encodeURIComponent(role)}`;
+  // Populate preset dropdown
+  const uids = Object.keys(PASSPORTS);
+  for(const uid of uids){
+    const opt = document.createElement("option");
+    opt.value = uid;
+    opt.textContent = uid.includes(".CN.") ? "Demo — Çin (CN)" : "Demo — AB (EU)";
+    presetEl.appendChild(opt);
   }
 
-  // Init from URL
-  uidInput.value = qs.get("uid") || "urn:iso:15459:DPPBAT.CN.EV.2026.000001";
-  roleSel.value = qs.get("role") || "public";
-  render(uidInput.value, roleSel.value);
+  const uidFromUrl = qs.get("uid") || uids[0];
+  const roleFromUrl = qs.get("role") || "public";
 
-  // Buttons
-  document.getElementById("go").addEventListener("click", () => {
-    const uid = uidInput.value.trim();
-    const role = roleSel.value;
-    window.location.href = currentLink(uid, role);
+  uidEl.value = uidFromUrl;
+  setActiveRole(roleFromUrl);
+
+  // Render first
+  render(uidFromUrl, roleFromUrl);
+
+  // =========================
+  // Events
+  // =========================
+  // Role tabs
+  roleTabs.addEventListener("click", (e)=>{
+    const tab = e.target.closest(".tab");
+    if(!tab) return;
+    const role = tab.dataset.role;
+    setActiveRole(role);
+    window.location.href = buildLink(uidEl.value.trim(), role);
   });
 
-  document.getElementById("copy").addEventListener("click", async () => {
-    const uid = uidInput.value.trim();
-    const role = roleSel.value;
-    const link = currentLink(uid, role);
-    try { await navigator.clipboard.writeText(link); alert("Kopyalandı:\n" + link); }
-    catch { prompt("Kopyalamak için:", link); }
+  // Preset change
+  presetEl.addEventListener("change", ()=>{
+    if(!presetEl.value) return;
+    uidEl.value = presetEl.value;
   });
 
-  // Quicklinks
-  const ql = document.getElementById("quicklinks");
-  ql.innerHTML = Object.keys(PASSPORTS).map(uid => {
-    const pub = currentLink(uid, "public");
-    const li  = currentLink(uid, "legitimate_interest");
-    const au  = currentLink(uid, "authorities");
-    return `
-      <div style="margin:6px 0">
-        <span class="pill">${uid}</span><br/>
-        <span class="links">
-          <a href="${pub}">Public</a> ·
-          <a href="${li}">Legitimate interest (demo)</a> ·
-          <a href="${au}">Authorities/NB (demo)</a>
-        </span>
-      </div>`;
-  }).join("");
+  // Open
+  document.getElementById("open").addEventListener("click", ()=>{
+    const uid = uidEl.value.trim();
+    const role = roleTabs.querySelector(".tab.active")?.dataset.role || "public";
+    window.location.href = buildLink(uid, role);
+  });
+
+  // Copy link
+  document.getElementById("copy").addEventListener("click", async ()=>{
+    const uid = uidEl.value.trim();
+    const role = roleTabs.querySelector(".tab.active")?.dataset.role || "public";
+    const link = buildLink(uid, role);
+    try{
+      await navigator.clipboard.writeText(link);
+      alert("Link kopyalandı:\n" + link);
+    }catch{
+      prompt("Kopyalamak için:", link);
+    }
+  });
+
+  // Print/PDF
+  document.getElementById("print").addEventListener("click", ()=>{
+    window.print();
+  });
 </script>
 </body>
 </html>
