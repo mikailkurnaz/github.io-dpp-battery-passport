@@ -9,7 +9,6 @@
   <style>
     :root{
       --bg:#0a0f1b;
-      --glass: rgba(255,255,255,.06);
       --line: rgba(255,255,255,.10);
       --line2: rgba(120,160,255,.16);
       --text:#e9f0ff;
@@ -25,7 +24,6 @@
     @media (prefers-color-scheme: light){
       :root{
         --bg:#f3f6ff;
-        --glass: rgba(17,24,39,.04);
         --line: rgba(17,24,39,.10);
         --line2: rgba(30,64,175,.14);
         --text:#0c1428;
@@ -43,9 +41,8 @@
       font-family: var(--font);
       color: var(--text);
       background:
-        radial-gradient(1000px 600px at 15% -10%, rgba(103,199,255,.22), transparent 60%),
-        radial-gradient(900px 560px at 100% 0%, rgba(63,224,193,.14), transparent 58%),
-        radial-gradient(900px 600px at 10% 110%, rgba(103,199,255,.10), transparent 58%),
+        radial-gradient(1000px 600px at 15% -10%, rgba(103,199,255,.18), transparent 60%),
+        radial-gradient(900px 560px at 100% 0%, rgba(63,224,193,.10), transparent 58%),
         var(--bg);
       overflow-x:hidden;
     }
@@ -55,25 +52,17 @@
     .wrap{
       max-width: 1180px;
       margin: 0 auto;
-      padding: 20px 14px 52px;
+      padding: 18px 12px 52px;
       padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px));
     }
 
     .shell{
       border: 1px solid var(--line);
-      border-radius: 26px;
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03) 35%, rgba(255,255,255,.02));
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
       box-shadow: var(--shadow);
       overflow: hidden;
       position: relative;
-    }
-    .shell::before{
-      content:"";
-      position:absolute; inset:-1px;
-      background: radial-gradient(900px 360px at 20% 0%, rgba(103,199,255,.18), transparent 60%),
-                  radial-gradient(600px 320px at 90% 10%, rgba(63,224,193,.14), transparent 55%);
-      pointer-events:none;
-      opacity:.9;
     }
     .shell > *{ position: relative; }
 
@@ -83,47 +72,29 @@
       align-items:center;
       justify-content:space-between;
       gap: 12px;
-      padding: 16px 16px;
+      padding: 14px 14px;
       border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(0,0,0,.18), transparent);
+      background: linear-gradient(180deg, rgba(0,0,0,.16), transparent);
       backdrop-filter: blur(10px);
     }
-    .brand{
-      display:flex; align-items:center; gap: 12px;
-      min-width: 220px;
-    }
+    .brand{ display:flex; align-items:center; gap: 10px; min-width: 220px; }
     .avatar{
-      width: 34px; height: 34px; border-radius: 12px;
+      width: 30px; height: 30px; border-radius: 10px;
       border: 1px solid var(--line);
-      background: conic-gradient(from 45deg, rgba(255,255,255,.12), rgba(255,255,255,.02), rgba(255,255,255,.12));
-      position: relative;
-      overflow:hidden;
+      background: rgba(255,255,255,.06);
       flex: 0 0 auto;
-    }
-    .avatar::after{
-      content:"";
-      position:absolute; inset:0;
-      background-image:
-        linear-gradient(90deg, rgba(255,255,255,.18) 0 50%, rgba(255,255,255,.03) 50% 100%),
-        linear-gradient(0deg, rgba(255,255,255,.18) 0 50%, rgba(255,255,255,.03) 50% 100%);
-      background-size: 10px 10px;
-      opacity:.55;
-      mix-blend-mode: overlay;
     }
 
     .title{
       font-weight: 950;
       letter-spacing:.2px;
       margin:0;
-      font-size: clamp(15px, 2.2vw, 18px);
+      font-size: 16px;
       line-height: 1.2;
       white-space: nowrap;
     }
 
-    .topright{
-      display:flex; align-items:center; gap: 10px; flex-wrap:wrap;
-      justify-content:flex-end;
-    }
+    .topright{ display:flex; align-items:center; gap: 10px; flex-wrap:wrap; justify-content:flex-end; }
 
     .btn{
       border: 1px solid var(--line);
@@ -142,35 +113,32 @@
       user-select:none;
       white-space: nowrap;
     }
-    .btn:hover{ border-color: rgba(103,199,255,.40); background: rgba(255,255,255,.07); }
+    .btn:hover{ border-color: rgba(103,199,255,.38); background: rgba(255,255,255,.07); }
     .btn:active{ transform: translateY(1px); }
     .btn.primary{
       border-color: rgba(103,199,255,.55);
-      background: rgba(103,199,255,.12);
+      background: rgba(103,199,255,.10);
     }
 
     .subline{
-      padding: 12px 16px 0;
+      padding: 10px 14px 0;
       color: var(--muted);
-      font-size: clamp(14px, 2vw, 16px);
+      font-size: 14px;
     }
-
-    .content{ padding: 14px 16px 16px; }
+    .content{ padding: 14px; }
 
     /* Cards */
     .grid2{
       display:grid;
       grid-template-columns: 1.15fr .85fr;
-      gap: 14px;
-      margin-top: 12px;
+      gap: 12px;
+      margin-top: 10px;
     }
 
     .card{
       border: 1px solid var(--line2);
       border-radius: var(--r);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03) 45%, rgba(255,255,255,.02)),
-        rgba(0,0,0,.10);
+      background: rgba(0,0,0,.10);
       box-shadow: var(--shadow2);
       backdrop-filter: blur(10px);
       overflow: hidden;
@@ -181,32 +149,21 @@
       border-bottom: 1px solid var(--line);
       font-weight: 950;
       letter-spacing:.2px;
-      font-size: clamp(16px, 2.6vw, 22px);
+      font-size: 18px;
     }
     .card .body{
       padding: 12px 14px 14px;
       color: var(--muted);
-      font-size: clamp(14px, 2vw, 16px);
-      line-height: 1.45;
+      font-size: 14px;
+      line-height: 1.55;
     }
 
     /* Overview layout */
     .overviewWrap{
       display:grid;
-      grid-template-columns: 92px 1fr;
-      gap: 14px;
-      align-items:center;
+      grid-template-columns: 1fr;
+      gap: 10px;
     }
-    .bigIcon{
-      width: 92px; height: 92px;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(103,199,255,.08);
-      display:flex; align-items:center; justify-content:center;
-    }
-    .list{ display:flex; flex-direction:column; gap: 10px; }
-    .item{ display:flex; align-items:flex-start; gap: 10px; color: var(--muted); }
-    .item b{ color: var(--text); font-weight: 900; }
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
     .inlineLink{ display:flex; align-items:center; gap: 8px; flex-wrap:wrap; word-break: break-word; }
     .iconBtn{
@@ -217,23 +174,30 @@
       display:inline-flex; align-items:center; justify-content:center;
       cursor:pointer;
       flex: 0 0 auto;
-      touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
     }
+    .kv{
+      display:grid;
+      grid-template-columns: 150px 1fr;
+      gap: 8px 12px;
+      align-items:start;
+    }
+    .k{ color: var(--muted2); }
+    .v{ color: var(--text); word-break: break-word; }
 
     /* Tabs */
     .tabsShell{
-      margin-top: 14px;
+      margin-top: 12px;
       border: 1px solid var(--line);
       border-radius: var(--r);
-      background: rgba(0,0,0,.12);
+      background: rgba(0,0,0,.10);
       box-shadow: var(--shadow2);
       overflow:hidden;
       backdrop-filter: blur(10px);
     }
     .tabs{
       display:flex;
-      gap: 10px;
+      gap: 8px;
       align-items:center;
       padding: 10px 10px;
       border-bottom: 1px solid var(--line);
@@ -241,33 +205,39 @@
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       background: rgba(0,0,0,.06);
+      position: sticky;
+      top: 0;
+      z-index: 5;
     }
     .tabs::-webkit-scrollbar{ display:none; }
 
     .tab{
-      padding: 12px 16px;
+      padding: 10px 12px;
       color: var(--muted2);
-      font-size: clamp(14px, 2.2vw, 18px);
+      font-size: 14px;
       cursor:pointer;
       border-radius: 12px;
       user-select:none;
       white-space: nowrap;
       flex: 0 0 auto;
       border: 1px solid transparent;
+      display:flex;
+      align-items:center;
+      gap:8px;
     }
     .tab.active{
       color: var(--blue);
-      font-weight: 950;
+      font-weight: 900;
       background: rgba(103,199,255,.10);
       border-color: rgba(103,199,255,.22);
     }
 
-    .tabsBody{ padding: 14px 14px 16px; }
+    .tabsBody{ padding: 14px; }
 
     .cols2{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 12px;
     }
     .miniCard{
       border: 1px solid var(--line2);
@@ -282,23 +252,14 @@
       border-bottom: 1px solid var(--line);
       display:flex; align-items:center; gap: 10px;
       font-weight: 950;
-      font-size: clamp(16px, 2.6vw, 22px);
+      font-size: 16px;
     }
     .miniBody{
       padding: 12px 14px 14px;
       color: var(--muted);
-      font-size: clamp(14px, 2vw, 16px);
-      line-height: 1.45;
+      font-size: 14px;
+      line-height: 1.55;
     }
-
-    .kv{
-      display:grid;
-      grid-template-columns: 200px 1fr;
-      gap: 10px 14px;
-      align-items:start;
-    }
-    .k{ color: var(--muted2); }
-    .v{ color: var(--text); word-break: break-word; }
 
     .chip{
       display:inline-flex; align-items:center; gap:8px;
@@ -311,11 +272,13 @@
       font-weight: 800;
       width: fit-content;
     }
-    .dot{
-      width:8px; height:8px; border-radius:999px;
-      background: var(--blue);
-      box-shadow: 0 0 18px rgba(103,199,255,.35);
-    }
+    .dot{ width:8px; height:8px; border-radius:999px; background: var(--blue); }
+
+    /* SVG sizing: minimal & consistent */
+    .i18 svg{ width:18px; height:18px; }
+    .i16 svg{ width:16px; height:16px; }
+    .i14 svg{ width:14px; height:14px; }
+    svg{ opacity:.92; }
 
     /* Toast */
     .toast{
@@ -340,46 +303,21 @@
       transform: translateX(-50%) translateY(-6px);
     }
 
-    /* === MOBILE BREAKPOINTS === */
     @media (max-width: 920px){
       .grid2{ grid-template-columns: 1fr; }
       .cols2{ grid-template-columns: 1fr; }
     }
     @media (max-width: 600px){
-      .wrap{ padding: 14px 10px 44px; }
-      .header{
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-      }
-      .brand{ min-width: 0; }
+      .header{ flex-direction: column; align-items: stretch; gap: 10px; }
       .title{ white-space: normal; }
       .topright{ width:100%; justify-content: stretch; }
-      .btn{
-        width:100%;
-        justify-content:center;
-        padding: 12px 14px;
-      }
-      .content{ padding: 12px 12px 14px; }
-      .subline{ padding: 10px 12px 0; }
-      .overviewWrap{ grid-template-columns: 1fr; }
-      .bigIcon{ width: 78px; height: 78px; }
+      .btn{ width:100%; justify-content:center; }
       .kv{ grid-template-columns: 1fr; }
-      .tabs{ position: sticky; top: 0; z-index: 5; }
+      .subline{ padding: 10px 14px 0; }
     }
 
-    /* Clean mode for thesis screenshots */
     .clean .header,
     .clean .subline { display:none !important; }
-
-    @media print{
-      body{ background:#fff !important; }
-      .shell{ box-shadow:none !important; }
-      .header, .subline{ display:none !important; }
-    }
-
-    .svg{ width: 26px; height: 26px; opacity: .95; }
-    .svgSmall{ width: 18px; height: 18px; opacity: .95; }
   </style>
 </head>
 
@@ -398,9 +336,7 @@
         </div>
       </div>
 
-      <div class="subline">
-        QR kod ile batarya pasaportuna erişim.
-      </div>
+      <div class="subline">QR kod ile batarya pasaportuna erişim.</div>
 
       <div class="content" id="app"></div>
     </div>
@@ -409,9 +345,6 @@
   <div class="toast" id="toast">Kopyalandı</div>
 
 <script>
-  // ---------------------------------------------------------
-  // DATA (örnek içerik; senin tez verilerinle genişletilebilir)
-  // ---------------------------------------------------------
   const DB = {
     "urn:iso:15459:DPPBAT.CN.EV.2026.000001": {
       overview: {
@@ -422,7 +355,7 @@
         production: "December 2026"
       },
       safety: {
-        hazardous: "Declared\nCobalt, Nickel as REACH ≥ 0.1%",
+        hazardous: "Declared\\nCobalt, Nickel as REACH ≥ 0.1%",
         extinguishing: "Water mist, Class D media, BC powder"
       },
       sustainability: {
@@ -439,13 +372,8 @@
         { title: "EU Declaration of Conformity", url: "https://example.com/eu-doc" },
         { title: "Carbon footprint study", url: "https://example.com/pcf" }
       ],
-      professional: {
-        dismantling: "HV isolation + PPE required. Disassembly sequence available under restricted access."
-      },
-      authority: {
-        reports: ["Test Report ID: TR-CN-EV-2026-EMC-01"],
-        soh: "SoH 98.4% · cycles 62"
-      }
+      professional: { dismantling: "HV isolation + PPE required. Disassembly sequence available under restricted access." },
+      authority: { reports: ["Test Report ID: TR-CN-EV-2026-EMC-01"], soh: "SoH 98.4% · cycles 62" }
     },
 
     "urn:iso:15459:DPPBAT.EU.EV.2026.000001": {
@@ -457,7 +385,7 @@
         production: "December 2026"
       },
       safety: {
-        hazardous: "Declared\nNickel as REACH ≥ 0.1%",
+        hazardous: "Declared\\nNickel as REACH ≥ 0.1%",
         extinguishing: "Water mist, Class D media, BC powder"
       },
       sustainability: {
@@ -474,24 +402,15 @@
         { title: "EU Declaration of Conformity", url: "https://example.com/eu-doc" },
         { title: "Carbon footprint study", url: "https://example.com/pcf" }
       ],
-      professional: {
-        dismantling: "HV isolation + thermal-runaway precautions. Disassembly sequence available under restricted access."
-      },
-      authority: {
-        reports: ["Test Report ID: TR-EU-EV-2026-EMC-01"],
-        soh: "SoH 99.1% · cycles 58"
-      }
+      professional: { dismantling: "HV isolation + thermal-runaway precautions. Disassembly sequence available under restricted access." },
+      authority: { reports: ["Test Report ID: TR-EU-EV-2026-EMC-01"], soh: "SoH 99.1% · cycles 58" }
     }
   };
 
-  // ---------------------------------------------------------
-  // URL params
-  // ---------------------------------------------------------
   const qs = new URLSearchParams(location.search);
   const uid = qs.get("uid") || Object.keys(DB)[0];
-  const role = (qs.get("role") || "public").toLowerCase(); // public|professional|authority
-  const tab  = (qs.get("tab")  || "details").toLowerCase(); // details|sustainability|circularity|documents|access
-
+  const role = (qs.get("role") || "public").toLowerCase();
+  const tab  = (qs.get("tab")  || "details").toLowerCase();
   if(qs.get("mode")==="clean") document.body.classList.add("clean");
 
   function baseUrl(){ return location.origin + location.pathname; }
@@ -515,38 +434,65 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(()=> toast.classList.remove("show"), 1400);
   }
-
   async function copy(text){
-    try{
-      await navigator.clipboard.writeText(text);
-      showToast("Kopyalandı");
-    }catch{
-      prompt("Kopyalamak için:", text);
-    }
+    try{ await navigator.clipboard.writeText(text); showToast("Kopyalandı"); }
+    catch{ prompt("Kopyalamak için:", text); }
   }
 
-  // SVG icons
+  // Premium-like (round caps/joins), consistent stroke
+  const S = `fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"`;
+
   const ICONS = {
-    doc: `<svg class="svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    doc: `<span class="i18"><svg viewBox="0 0 24 24" ${S}>
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-      <path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>
-    </svg>`,
-    shield:`<svg class="svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/>
-    </svg>`,
-    battery:`<svg class="svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 11v2"/><path d="M6 10h8"/><path d="M6 14h6"/>
-    </svg>`,
-    clip: `<svg class="svgSmall" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/>
+    </svg></span>`,
+    shield:`<span class="i18"><svg viewBox="0 0 24 24" ${S}>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      <path d="M9 12l2 2 4-4"/>
+    </svg></span>`,
+    info:`<span class="i14"><svg viewBox="0 0 24 24" ${S}>
+      <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+    </svg></span>`,
+    leaf:`<span class="i14"><svg viewBox="0 0 24 24" ${S}>
+      <path d="M11 20c6 0 10-4 10-10V4s-6 0-10 4-4 10-4 10 1 2 4 2z"/>
+      <path d="M21 4L11 14"/>
+    </svg></span>`,
+    recycle:`<span class="i14"><svg viewBox="0 0 24 24" ${S}>
+      <path d="M7 19l-2-3 3-2"/><path d="M3 16h6"/>
+      <path d="M7 5l2 3-3 2"/><path d="M9 8H3"/>
+      <path d="M17 19l-2 3-3-2"/><path d="M21 16h-6"/>
+      <path d="M17 5l2-3 3 2"/><path d="M15 8h6"/>
+    </svg></span>`,
+    file:`<span class="i14"><svg viewBox="0 0 24 24" ${S}>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <path d="M14 2v6h6"/>
+    </svg></span>`,
+    key:`<span class="i14"><svg viewBox="0 0 24 24" ${S}>
+      <path d="M21 2l-2 2"/><path d="M11.5 11.5a4.5 4.5 0 1 1 6.36 6.36L14 22l-4-4 1.5-1.5 2 2L16 16l-2-2 1.5-1.5 2 2 1.36-1.36"/>
+    </svg></span>`,
+    clip:`<span class="i16"><svg viewBox="0 0 24 24" ${S}>
       <path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l9.9-9.9a3.5 3.5 0 0 1 4.95 4.95l-10.6 10.6a2 2 0 1 1-2.83-2.83l9.9-9.9"/>
-    </svg>`
+    </svg></span>`,
+    alert:`<span class="i16"><svg viewBox="0 0 24 24" ${S}>
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+      <path d="M12 9v4"/><path d="M12 17h.01"/>
+    </svg></span>`,
+    fire:`<span class="i16"><svg viewBox="0 0 24 24" ${S}>
+      <path d="M12 22c4 0 7-3 7-7 0-2-1-4-3-5 0 2-1 3-2 4 0-3-2-6-5-8 0 4-3 5-3 9 0 4 3 7 6 7z"/>
+    </svg></span>`
   };
 
   const app = document.getElementById("app");
   const data = DB[uid];
 
-  function tabBtn(name, key){
-    return `<div class="tab ${tab===key?'active':''}" data-tab="${key}">${name}</div>`;
+  function tabBtn(name, key, icon){
+    return `<div class="tab ${tab===key?'active':''}" data-tab="${key}">${icon}<span>${name}</span></div>`;
+  }
+
+  function viewChip(){
+    const label = role === "authority" ? "Authority" : (role === "professional" ? "Professional" : "Public");
+    return `<span class="chip"><span class="dot"></span>${label}</span>`;
   }
 
   function renderNotFound(){
@@ -558,11 +504,6 @@
     `;
   }
 
-  function viewChip(){
-    const label = role === "authority" ? "Authority" : (role === "professional" ? "Professional" : "Public");
-    return `<span class="chip"><span class="dot"></span>${label}</span>`;
-  }
-
   function showTabBody(tabBody){
     const d = data;
 
@@ -570,7 +511,7 @@
       tabBody.innerHTML = `
         <div class="cols2">
           <div class="miniCard">
-            <div class="miniHead">${ICONS.battery} Details</div>
+            <div class="miniHead">${ICONS.info} Details</div>
             <div class="miniBody">
               ${viewChip()}
               <div style="height:10px"></div>
@@ -608,7 +549,7 @@
       tabBody.innerHTML = `
         <div class="cols2">
           <div class="miniCard">
-            <div class="miniHead">${ICONS.doc} Sustainability</div>
+            <div class="miniHead">${ICONS.leaf} Sustainability</div>
             <div class="miniBody">
               ${viewChip()}
               <div style="height:12px"></div>
@@ -626,7 +567,7 @@
           </div>
 
           <div class="miniCard">
-            <div class="miniHead">${ICONS.doc} Responsible sourcing</div>
+            <div class="miniHead">${ICONS.info} Responsible sourcing</div>
             <div class="miniBody">
               <div class="kv">
                 <div class="k">Due diligence</div>
@@ -644,7 +585,7 @@
     if(tab === "circularity"){
       tabBody.innerHTML = `
         <div class="miniCard">
-          <div class="miniHead">${ICONS.doc} Circularity</div>
+          <div class="miniHead">${ICONS.recycle} Circularity</div>
           <div class="miniBody">
             <div class="kv">
               <div class="k">Collection</div>
@@ -664,7 +605,7 @@
       const list = (d.documents||[]).map(x=>`<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.title)}</a></li>`).join("");
       tabBody.innerHTML = `
         <div class="miniCard">
-          <div class="miniHead">${ICONS.doc} Documents</div>
+          <div class="miniHead">${ICONS.file} Documents</div>
           <div class="miniBody">
             <ul style="margin:0; padding-left:18px;">${list || "<li>No public documents</li>"}</ul>
           </div>
@@ -673,11 +614,10 @@
       return;
     }
 
-    // access
     const restricted = (role !== "professional" && role !== "authority");
     tabBody.innerHTML = `
       <div class="miniCard">
-        <div class="miniHead">${ICONS.doc} Access</div>
+        <div class="miniHead">${ICONS.key} Access</div>
         <div class="miniBody">
           ${viewChip()}
           <div style="height:12px"></div>
@@ -704,42 +644,47 @@
   function render(){
     if(!data){ renderNotFound(); return; }
 
-    // ✅ İSTEDİĞİN DÜZELTME: "Battery Passport Overview" yerine "DPP-Battery Passport"
     const overview = `
       <div class="card">
         <div class="head">${ICONS.doc} DPP-Battery Passport</div>
         <div class="body">
-          <div class="overviewWrap">
-            <div class="bigIcon" aria-hidden="true">${ICONS.battery}</div>
-            <div class="list">
-              <div class="item">
-                <span class="k">UID:</span>
-                <span class="v inlineLink">
-                  <b class="mono">${esc(data.overview.uid)}</b>
-                  <span class="iconBtn" id="copyUid" title="Copy UID">${ICONS.clip}</span>
-                </span>
-              </div>
-              <div class="item"><span class="k">Type</span><span class="v">${esc(data.overview.category)}</span></div>
-              <div class="item"><span class="k">Manufacturer</span><span class="v">${esc(data.overview.manufacturer)}</span></div>
-              <div class="item"><span class="k">Site</span><span class="v">${esc(data.overview.site)}</span></div>
-              <div class="item"><span class="k">Production date</span><span class="v">${esc(data.overview.production)}</span></div>
+          <div class="kv">
+            <div class="k">UID</div>
+            <div class="v inlineLink">
+              <span class="mono">${esc(data.overview.uid)}</span>
+              <span class="iconBtn" id="copyUid" title="Copy UID">${ICONS.clip}</span>
             </div>
+
+            <div class="k">Type</div>
+            <div class="v">${esc(data.overview.category)}</div>
+
+            <div class="k">Manufacturer</div>
+            <div class="v">${esc(data.overview.manufacturer)}</div>
+
+            <div class="k">Site</div>
+            <div class="v">${esc(data.overview.site)}</div>
+
+            <div class="k">Production date</div>
+            <div class="v">${esc(data.overview.production)}</div>
           </div>
         </div>
       </div>
     `;
 
-    // ✅ İSTEDİĞİN DÜZELTME: "Safety Snapshot" yerine "Safety"
     const safety = `
       <div class="card">
         <div class="head">${ICONS.shield} Safety</div>
         <div class="body">
-          <div style="font-weight:950; color:var(--text); margin-bottom:6px;">Hazardous substances</div>
+          <div style="display:flex;align-items:center;gap:8px;color:var(--muted2);font-weight:800;margin-bottom:6px;">
+            ${ICONS.alert}<span>Hazardous substances</span>
+          </div>
           <div style="white-space:pre-line;">${esc(data.safety.hazardous)}</div>
 
           <div style="height:12px"></div>
 
-          <div style="font-weight:950; color:var(--text); margin-bottom:6px;">Extinguishing agent</div>
+          <div style="display:flex;align-items:center;gap:8px;color:var(--muted2);font-weight:800;margin-bottom:6px;">
+            ${ICONS.fire}<span>Extinguishing agent</span>
+          </div>
           <div style="color:var(--teal); font-weight:900;">${esc(data.safety.extinguishing)}</div>
         </div>
       </div>
@@ -748,20 +693,17 @@
     const tabs = `
       <div class="tabsShell">
         <div class="tabs" id="tabs">
-          ${tabBtn("Details","details")}
-          ${tabBtn("Sustainability","sustainability")}
-          ${tabBtn("Circularity","circularity")}
-          ${tabBtn("Documents","documents")}
-          ${tabBtn("Access","access")}
+          ${tabBtn("Details","details", ICONS.info)}
+          ${tabBtn("Sustainability","sustainability", ICONS.leaf)}
+          ${tabBtn("Circularity","circularity", ICONS.recycle)}
+          ${tabBtn("Documents","documents", ICONS.file)}
+          ${tabBtn("Access","access", ICONS.key)}
         </div>
         <div class="tabsBody" id="tabBody"></div>
       </div>
     `;
 
-    app.innerHTML = `
-      <div class="grid2">${overview}${safety}</div>
-      ${tabs}
-    `;
+    app.innerHTML = `<div class="grid2">${overview}${safety}</div>${tabs}`;
 
     document.getElementById("tabs").addEventListener("click",(e)=>{
       const t = e.target.closest(".tab");
@@ -775,7 +717,6 @@
 
   render();
 
-  // header buttons
   document.getElementById("copyLink").onclick = ()=> copy(location.href);
   document.getElementById("goAccess").onclick = ()=> location.href = linkFor({ tab:"access", role: (role==="public" ? "professional" : role) });
 </script>
