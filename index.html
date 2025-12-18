@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DPP Battery Passport — Demo Viewer</title>
+  <style>
+    :root { --bg:#0b1220; --card:#111b2e; --muted:#a7b0c0; --text:#e9eef7; --line:#23314d; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; background:var(--bg); color:var(--text); }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 22px 16px 60px; }
+    .top { display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .brand { display:flex; gap:10px; align-items:center; }
+    .dot { width:10px; height:10px; border-radius:999px; background:#5dd6ff; box-shadow:0 0 18px rgba(93,214,255,.5); }
+    h1 { font-size: 18px; margin:0; letter-spacing:.2px; }
+    .sub { color:var(--muted); font-size: 13px; margin-top:4px; }
+    .bar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    input, select, button {
+      border:1px solid var(--line); background:#0f172a; color:var(--text);
+      border-radius:12px; padding:10px 12px; font-size: 14px;
+    }
+    button { cursor:pointer; }
+    .grid { display:grid; grid-template-columns: 1fr; gap: 12px; margin-top:16px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:14px; }
+    .card h2 { font-size: 14px; margin:0 0 10px; color:#cfe2ff; }
+    .kv { display:grid; grid-template-columns: 220px 1fr; gap: 8px 12px; font-size: 13px; }
+    .k { color: var(--muted); }
+    .pill { display:inline-block; padding: 4px 10px; border:1px solid var(--line); border-radius:999px; font-size:12px; color:var(--muted); }
+    .links a { color:#5dd6ff; text-decoration:none; }
+    .links a:hover { text-decoration:underline; }
+    .note { font-size: 12px; color: var(--muted); line-height:1.45; }
+    .list a { color:#5dd6ff; }
+    .err { border-color:#ff5d7a; }
+    .ok  { border-color:#2be4a7; }
+    pre { background:#0f172a; border:1px solid var(--line); border-radius:14px; padding:12px; overflow:auto; font-size:12px; }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="dot"></div>
+        <div>
+          <h1>DPP Battery Passport — Demo Viewer</h1>
+          <div class="sub">GitHub Pages üzerinde statik demo (tez için). “Restricted” veriler gerçek hayatta kimlik doğrulama ister.</div>
+        </div>
+      </div>
+
+      <div class="bar">
+        <input id="uid" size="44" placeholder="uid=urn:iso:15459:..." />
+        <select id="role">
+          <option value="public">Public</option>
+          <option value="legitimate_interest">Legitimate interest (demo)</option>
+          <option value="authorities">Authorities/NB (demo)</option>
+        </select>
+        <button id="go">Görüntüle</button>
+        <button id="copy">Linki kopyala</button>
+      </div>
+    </div>
+
+    <div class="grid" id="content"></div>
+
+    <div class="card">
+      <h2>Hızlı deneme linkleri</h2>
+      <div class="note list" id="quicklinks"></div>
+    </div>
+
+    <div class="card">
+      <h2>Güvenlik notu</h2>
+      <div class="note">
+        GitHub Pages herkese açık statik yayın yapar. Bu yüzden “restricted” alanlara gerçek tedarik zinciri / test raporu gibi gizli içerik koyma.
+        Tezde mimariyi anlatırken: Public içerik statik sayfada gösterilebilir; Restricted içerik için gerçek hayatta API + kimlik doğrulama (RBAC/ABAC) gerekir.
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ====== DEMO DATA (temsili) ======
+  const PASSPORTS = {
+    "urn:iso:15459:DPPBAT.CN.EV.2026.000001": {
+      passport_version: "1.0",
+      uid: "urn:iso:15459:DPPBAT.CN.EV.2026.000001",
+      public_model: {
+        battery_type: "EV traction battery",
+        model_id: "CN-EV-NMC-60kWh-2026",
+        manufacturer_name: "Shenzhen PowerCell Ltd.",
+        manufacturing_site: "Shenzhen, Guangdong (CN)",
+        chemistry: "Li-ion NMC 811 / Graphite",
+        rated_energy_kWh: 60.0,
+        voltage_min_nom_max_V: "300 / 355 / 403",
+        rated_capacity_Ah: 170,
+        expected_cycles_to_80pct: 1500,
+        carbon_footprint_kgCO2e_per_kWh: 58.0,
+        recycled_content_pct: "Co 6 / Ni 5 / Li 2",
+        renewable_content_share_pct: 28
+      },
+      restricted_model_legitimate_interest: {
+        detailed_composition: "Cathode: NMC 811 | Anode: Graphite | Electrolyte: LiPF6 in carbonates (illustrative)",
+        dismantling: "HV isolation + PPE required; see disassembly docs (demo)",
+        spare_parts: ["SP-HVCON-01", "SP-BMS-96S-02"]
+      },
+      restricted_model_authorities: {
+        test_reports: ["TR-CN-EV-2026-EMC-01 (demo)"]
+      },
+      restricted_individual: {
+        serial_no: "CN26EV000001-001",
+        battery_status: "original",
+        put_into_service_date: "2026-12-15",
+        soh_pct: 98.4,
+        charge_cycles: 62
+      }
+    },
+
+    "urn:iso:15459:DPPBAT.EU.EV.2026.000001": {
+      passport_version: "1.0",
+      uid: "urn:iso:15459:DPPBAT.EU.EV.2026.000001",
+      public_model: {
+        battery_type: "EV traction battery",
+        model_id: "EU-EV-NMC-60kWh-2026",
+        manufacturer_name: "EuroCell Energy S.A.",
+        manufacturing_site: "Wroclaw (PL)",
+        chemistry: "Li-ion NMC 622 / Graphite",
+        rated_energy_kWh: 60.0,
+        voltage_min_nom_max_V: "300 / 355 / 403",
+        rated_capacity_Ah: 170,
+        expected_cycles_to_80pct: 1700,
+        carbon_footprint_kgCO2e_per_kWh: 41.5,
+        recycled_content_pct: "Co 10 / Ni 8 / Li 4",
+        renewable_content_share_pct: 66
+      },
+      restricted_model_legitimate_interest: {
+        detailed_composition: "Cathode: NMC 622 | Anode: Graphite | Electrolyte: LiPF6 in carbonates (illustrative)",
+        dismantling: "HV isolation + thermal-runaway precautions (demo)",
+        spare_parts: ["SP-HVCON-01", "SP-BMS-96S-02"]
+      },
+      restricted_model_authorities: {
+        test_reports: ["TR-EU-EV-2026-EMC-01 (demo)"]
+      },
+      restricted_individual: {
+        serial_no: "EU26EV000001-001",
+        battery_status: "original",
+        put_into_service_date: "2026-12-15",
+        soh_pct: 99.1,
+        charge_cycles: 58
+      }
+    }
+  };
+
+  // ====== Helpers ======
+  const qs = new URLSearchParams(window.location.search);
+  const uidInput = document.getElementById("uid");
+  const roleSel = document.getElementById("role");
+  const content = document.getElementById("content");
+
+  function row(k, v) {
+    return `<div class="k">${k}</div><div>${v ?? "-"}</div>`;
+  }
+
+  function card(title, innerHtml, cls="") {
+    return `<div class="card ${cls}"><h2>${title}</h2>${innerHtml}</div>`;
+  }
+
+  function render(uid, role) {
+    content.innerHTML = "";
+    const p = PASSPORTS[uid];
+
+    if (!p) {
+      content.innerHTML = card("Bulunamadı", `
+        <div class="note">Bu UID için demo kayıt yok: <span class="pill">${uid}</span></div>
+        <div class="note">İpucu: Quick deneme linklerinden birini seç.</div>
+      `, "err");
+      return;
+    }
+
+    // Header card
+    content.innerHTML += card("Kimlik", `
+      <div class="kv">
+        ${row("passport_version", p.passport_version)}
+        ${row("uid", `<span class="pill">${p.uid}</span>`)}
+        ${row("role (demo)", `<span class="pill">${role}</span>`)}
+      </div>
+    `, "ok");
+
+    // Public model
+    const m = p.public_model;
+    content.innerHTML += card("Public — Model bilgileri", `
+      <div class="kv">
+        ${row("battery_type", m.battery_type)}
+        ${row("model_id", m.model_id)}
+        ${row("manufacturer", m.manufacturer_name)}
+        ${row("manufacturing_site", m.manufacturing_site)}
+        ${row("chemistry", m.chemistry)}
+        ${row("rated_energy_kWh", m.rated_energy_kWh)}
+        ${row("voltage (min/nom/max) V", m.voltage_min_nom_max_V)}
+        ${row("rated_capacity_Ah", m.rated_capacity_Ah)}
+        ${row("expected_cycles_to_80%", m.expected_cycles_to_80pct)}
+        ${row("carbon_footprint (kgCO2e/kWh)", m.carbon_footprint_kgCO2e_per_kWh)}
+        ${row("recycled_content (%)", m.recycled_content_pct)}
+        ${row("renewable_content_share (%)", m.renewable_content_share_pct)}
+      </div>
+    `);
+
+    // Restricted (demo)
+    if (role === "legitimate_interest") {
+      const r = p.restricted_model_legitimate_interest;
+      content.innerHTML += card("Restricted — Legitimate interest (demo)", `
+        <div class="kv">
+          ${row("detailed_composition", r.detailed_composition)}
+          ${row("dismantling", r.dismantling)}
+          ${row("spare_parts", (r.spare_parts || []).map(x=>`<span class="pill">${x}</span>`).join(" "))}
+        </div>
+        <div class="note">Not: Bu alanlar gerçek hayatta kimlik doğrulama + yetkilendirme ile servis edilmelidir.</div>
+      `);
+    }
+
+    if (role === "authorities") {
+      const a = p.restricted_model_authorities;
+      const i = p.restricted_individual;
+      content.innerHTML += card("Restricted — Authorities/NB (demo)", `
+        <div class="kv">
+          ${row("test_reports", (a.test_reports || []).map(x=>`<span class="pill">${x}</span>`).join(" "))}
+        </div>
+      `);
+
+      content.innerHTML += card("Restricted — Individual battery (demo)", `
+        <div class="kv">
+          ${row("serial_no", i.serial_no)}
+          ${row("battery_status", i.battery_status)}
+          ${row("put_into_service_date", i.put_into_service_date)}
+          ${row("SoH (%)", i.soh_pct)}
+          ${row("charge_cycles", i.charge_cycles)}
+        </div>
+      `);
+    }
+
+    // Raw JSON
+    content.innerHTML += card("Ham JSON (tez eki için)", `<pre>${escapeHtml(JSON.stringify(p, null, 2))}</pre>`);
+  }
+
+  function escapeHtml(s) {
+    return s.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+  }
+
+  function currentLink(uid, role) {
+    const base = window.location.origin + window.location.pathname;
+    return `${base}?uid=${encodeURIComponent(uid)}&role=${encodeURIComponent(role)}`;
+  }
+
+  // Init from URL
+  uidInput.value = qs.get("uid") || "urn:iso:15459:DPPBAT.CN.EV.2026.000001";
+  roleSel.value = qs.get("role") || "public";
+  render(uidInput.value, roleSel.value);
+
+  // Buttons
+  document.getElementById("go").addEventListener("click", () => {
+    const uid = uidInput.value.trim();
+    const role = roleSel.value;
+    window.location.href = currentLink(uid, role);
+  });
+
+  document.getElementById("copy").addEventListener("click", async () => {
+    const uid = uidInput.value.trim();
+    const role = roleSel.value;
+    const link = currentLink(uid, role);
+    try { await navigator.clipboard.writeText(link); alert("Kopyalandı:\n" + link); }
+    catch { prompt("Kopyalamak için:", link); }
+  });
+
+  // Quicklinks
+  const ql = document.getElementById("quicklinks");
+  ql.innerHTML = Object.keys(PASSPORTS).map(uid => {
+    const pub = currentLink(uid, "public");
+    const li  = currentLink(uid, "legitimate_interest");
+    const au  = currentLink(uid, "authorities");
+    return `
+      <div style="margin:6px 0">
+        <span class="pill">${uid}</span><br/>
+        <span class="links">
+          <a href="${pub}">Public</a> ·
+          <a href="${li}">Legitimate interest (demo)</a> ·
+          <a href="${au}">Authorities/NB (demo)</a>
+        </span>
+      </div>`;
+  }).join("");
+</script>
+</body>
+</html>
