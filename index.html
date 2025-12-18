@@ -10,7 +10,6 @@
     :root{
       --bg:#0a0f1b;
       --glass: rgba(255,255,255,.06);
-      --glass2: rgba(255,255,255,.04);
       --line: rgba(255,255,255,.10);
       --line2: rgba(120,160,255,.16);
       --text:#e9f0ff;
@@ -27,7 +26,6 @@
       :root{
         --bg:#f3f6ff;
         --glass: rgba(17,24,39,.04);
-        --glass2: rgba(17,24,39,.03);
         --line: rgba(17,24,39,.10);
         --line2: rgba(30,64,175,.14);
         --text:#0c1428;
@@ -114,7 +112,7 @@
     }
 
     .title{
-      font-weight: 900;
+      font-weight: 950;
       letter-spacing:.2px;
       margin:0;
       font-size: clamp(15px, 2.2vw, 18px);
@@ -156,7 +154,6 @@
       color: var(--muted);
       font-size: clamp(14px, 2vw, 16px);
     }
-    .subline b{ color: var(--blue); font-weight: 900; }
 
     .content{ padding: 14px 16px 16px; }
 
@@ -320,7 +317,7 @@
       box-shadow: 0 0 18px rgba(103,199,255,.35);
     }
 
-    /* Toast (no alert popups) */
+    /* Toast */
     .toast{
       position: fixed;
       left: 50%;
@@ -373,21 +370,12 @@
 
     /* Clean mode for thesis screenshots */
     .clean .header,
-    .clean .subline,
-    .clean .footer { display:none !important; }
-
-    .footer{
-      padding: 10px 16px 14px;
-      border-top: 1px solid var(--line);
-      color: var(--muted2);
-      font-size: 12.5px;
-      background: rgba(0,0,0,.08);
-    }
+    .clean .subline { display:none !important; }
 
     @media print{
       body{ background:#fff !important; }
       .shell{ box-shadow:none !important; }
-      .header, .subline, .footer{ display:none !important; }
+      .header, .subline{ display:none !important; }
     }
 
     .svg{ width: 26px; height: 26px; opacity: .95; }
@@ -406,7 +394,7 @@
 
         <div class="topright">
           <button class="btn" id="copyLink">Link kopyala</button>
-          <button class="btn primary" id="goProfessional">Professional Access</button>
+          <button class="btn primary" id="goAccess">Access</button>
         </div>
       </div>
 
@@ -415,10 +403,6 @@
       </div>
 
       <div class="content" id="app"></div>
-
-      <div class="footer">
-        Bu sayfa, tez çalışması kapsamında “Battery DPP” görüntüleyici arayüzü prototipidir.
-      </div>
     </div>
   </div>
 
@@ -426,7 +410,7 @@
 
 <script>
   // ---------------------------------------------------------
-  // DATA (örnek)
+  // DATA (örnek içerik; senin tez verilerinle genişletilebilir)
   // ---------------------------------------------------------
   const DB = {
     "urn:iso:15459:DPPBAT.CN.EV.2026.000001": {
@@ -443,13 +427,13 @@
       },
       sustainability: {
         carbon: "58.0 kgCO₂e / kWh",
-        method: "Methodology reference (placeholder)",
+        method: "Methodology reference",
         recycled: "Cobalt: 6 %, Nickel: 5 %, Lithium: 2 %",
-        recycled_note: "Production reference (placeholder)"
+        recycled_note: "Production reference"
       },
       sourcing: {
-        dd: "Due diligence / sourcing reference (placeholder)",
-        epr: "National collection / take-back guidance (placeholder)"
+        dd: "Due diligence / sourcing reference",
+        epr: "National collection / take-back guidance"
       },
       documents: [
         { title: "EU Declaration of Conformity", url: "https://example.com/eu-doc" },
@@ -478,13 +462,13 @@
       },
       sustainability: {
         carbon: "41.5 kgCO₂e / kWh",
-        method: "Methodology reference (placeholder)",
+        method: "Methodology reference",
         recycled: "Cobalt: 10 %, Nickel: 8 %, Lithium: 4 %",
-        recycled_note: "Production reference (placeholder)"
+        recycled_note: "Production reference"
       },
       sourcing: {
-        dd: "Due diligence / sourcing reference (placeholder)",
-        epr: "National collection / take-back guidance (placeholder)"
+        dd: "Due diligence / sourcing reference",
+        epr: "National collection / take-back guidance"
       },
       documents: [
         { title: "EU Declaration of Conformity", url: "https://example.com/eu-doc" },
@@ -720,6 +704,7 @@
   function render(){
     if(!data){ renderNotFound(); return; }
 
+    // ✅ İSTEDİĞİN DÜZELTME: "Battery Passport Overview" yerine "DPP-Battery Passport"
     const overview = `
       <div class="card">
         <div class="head">${ICONS.doc} DPP-Battery Passport</div>
@@ -744,6 +729,7 @@
       </div>
     `;
 
+    // ✅ İSTEDİĞİN DÜZELTME: "Safety Snapshot" yerine "Safety"
     const safety = `
       <div class="card">
         <div class="head">${ICONS.shield} Safety</div>
@@ -791,7 +777,7 @@
 
   // header buttons
   document.getElementById("copyLink").onclick = ()=> copy(location.href);
-  document.getElementById("goProfessional").onclick = ()=> location.href = linkFor({ tab:"access", role:"professional" });
+  document.getElementById("goAccess").onclick = ()=> location.href = linkFor({ tab:"access", role: (role==="public" ? "professional" : role) });
 </script>
 </body>
 </html>
