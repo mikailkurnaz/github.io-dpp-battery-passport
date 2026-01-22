@@ -84,7 +84,6 @@
       background: rgba(255,255,255,.06);
       flex: 0 0 auto;
     }
-
     .title{
       font-weight: 950;
       letter-spacing:.2px;
@@ -158,12 +157,6 @@
       line-height: 1.55;
     }
 
-    /* Overview layout */
-    .overviewWrap{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
     .inlineLink{ display:flex; align-items:center; gap: 8px; flex-wrap:wrap; word-break: break-word; }
     .iconBtn{
@@ -176,6 +169,7 @@
       flex: 0 0 auto;
       -webkit-tap-highlight-color: transparent;
     }
+
     .kv{
       display:grid;
       grid-template-columns: 150px 1fr;
@@ -261,6 +255,43 @@
       line-height: 1.55;
     }
 
+    /* KPI strip */
+    .kpis{
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .kpi{
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      padding: 10px 12px;
+    }
+    .kpi .t{ color: var(--muted2); font-size: 12px; font-weight: 800; }
+    .kpi .n{ color: var(--text); font-size: 16px; font-weight: 950; margin-top: 4px; line-height: 1.2; }
+    .kpi .s{ color: var(--muted); font-size: 12px; margin-top: 4px; }
+
+    details{
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255,255,255,.03);
+      padding: 10px 12px;
+    }
+    summary{
+      cursor:pointer;
+      color: var(--text);
+      font-weight: 900;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    .detailList{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
     .chip{
       display:inline-flex; align-items:center; gap:8px;
       padding: 6px 10px;
@@ -313,9 +344,10 @@
       .topright{ width:100%; justify-content: stretch; }
       .btn{ width:100%; justify-content:center; }
       .kv{ grid-template-columns: 1fr; }
-      .subline{ padding: 10px 14px 0; }
+      .kpis{ grid-template-columns: 1fr; }
     }
 
+    /* Clean mode (QR için) */
     .clean .header,
     .clean .subline { display:none !important; }
   </style>
@@ -345,6 +377,7 @@
   <div class="toast" id="toast">Kopyalandı</div>
 
 <script>
+  // --- Demo DB (teze uygun: CN vs EU örneği) ---
   const DB = {
     "urn:iso:15459:DPPBAT.CN.EV.2026.000001": {
       overview: {
@@ -355,25 +388,35 @@
         production: "December 2026"
       },
       safety: {
-        hazardous: "Declared\\nCobalt, Nickel as REACH ≥ 0.1%",
+        hazardous: "Declared\nCobalt, Nickel as REACH ≥ 0.1%",
         extinguishing: "Water mist, Class D media, BC powder"
       },
       sustainability: {
         carbon: "58.0 kgCO₂e / kWh",
-        method: "Methodology reference",
-        recycled: "Cobalt: 6 %, Nickel: 5 %, Lithium: 2 %",
-        recycled_note: "Production reference"
+        class: "C",
+        recycled: "Co 6% · Ni 5% · Li 2%",
+        lifecycle: [
+          { stage: "Raw materials", value: "32.0 kgCO₂e/kWh" },
+          { stage: "Cell manufacturing", value: "18.5 kgCO₂e/kWh" },
+          { stage: "Pack assembly", value: "4.0 kgCO₂e/kWh" },
+          { stage: "Transport", value: "3.5 kgCO₂e/kWh" }
+        ],
+        method: "Methodology reference"
       },
-      sourcing: {
-        dd: "Due diligence / sourcing reference",
-        epr: "National collection / take-back guidance"
+      circularity: {
+        takeback: "National collection / take-back guidance (placeholder)."
       },
       documents: [
-        { title: "EU Declaration of Conformity", url: "https://example.com/eu-doc" },
-        { title: "Carbon footprint study", url: "https://example.com/pcf" }
+        { title: "EU Declaration of Conformity (placeholder)", url: "https://example.com/eu-doc" },
+        { title: "Carbon footprint study (placeholder)", url: "https://example.com/pcf" }
       ],
-      professional: { dismantling: "HV isolation + PPE required. Disassembly sequence available under restricted access." },
-      authority: { reports: ["Test Report ID: TR-CN-EV-2026-EMC-01"], soh: "SoH 98.4% · cycles 62" }
+      professional: {
+        dismantling: "HV isolation + PPE required. Disassembly sequence available under restricted access."
+      },
+      authority: {
+        reports: ["Test Report ID: TR-CN-EV-2026-EMC-01"],
+        soh: "SoH 98.4% · cycles 62"
+      }
     },
 
     "urn:iso:15459:DPPBAT.EU.EV.2026.000001": {
@@ -385,32 +428,44 @@
         production: "December 2026"
       },
       safety: {
-        hazardous: "Declared\\nNickel as REACH ≥ 0.1%",
+        hazardous: "Declared\nNickel as REACH ≥ 0.1%",
         extinguishing: "Water mist, Class D media, BC powder"
       },
       sustainability: {
         carbon: "41.5 kgCO₂e / kWh",
-        method: "Methodology reference",
-        recycled: "Cobalt: 10 %, Nickel: 8 %, Lithium: 4 %",
-        recycled_note: "Production reference"
+        class: "B",
+        recycled: "Co 10% · Ni 8% · Li 4%",
+        lifecycle: [
+          { stage: "Raw materials", value: "22.0 kgCO₂e/kWh" },
+          { stage: "Cell manufacturing", value: "14.0 kgCO₂e/kWh" },
+          { stage: "Pack assembly", value: "3.0 kgCO₂e/kWh" },
+          { stage: "Transport", value: "2.5 kgCO₂e/kWh" }
+        ],
+        method: "Methodology reference"
       },
-      sourcing: {
-        dd: "Due diligence / sourcing reference",
-        epr: "National collection / take-back guidance"
+      circularity: {
+        takeback: "National collection / take-back guidance (placeholder)."
       },
       documents: [
-        { title: "EU Declaration of Conformity", url: "https://example.com/eu-doc" },
-        { title: "Carbon footprint study", url: "https://example.com/pcf" }
+        { title: "EU Declaration of Conformity (placeholder)", url: "https://example.com/eu-doc" },
+        { title: "Carbon footprint study (placeholder)", url: "https://example.com/pcf" }
       ],
-      professional: { dismantling: "HV isolation + thermal-runaway precautions. Disassembly sequence available under restricted access." },
-      authority: { reports: ["Test Report ID: TR-EU-EV-2026-EMC-01"], soh: "SoH 99.1% · cycles 58" }
+      professional: {
+        dismantling: "HV isolation + thermal-runaway precautions. Disassembly sequence available under restricted access."
+      },
+      authority: {
+        reports: ["Test Report ID: TR-EU-EV-2026-EMC-01"],
+        soh: "SoH 99.1% · cycles 58"
+      }
     }
   };
 
+  // --- URL params ---
   const qs = new URLSearchParams(location.search);
   const uid = qs.get("uid") || Object.keys(DB)[0];
-  const role = (qs.get("role") || "public").toLowerCase();
-  const tab  = (qs.get("tab")  || "details").toLowerCase();
+  const role = (qs.get("role") || "public").toLowerCase(); // public|professional|authority
+  const tab  = (qs.get("tab")  || "details").toLowerCase(); // details|sustainability|circularity|documents|access
+
   if(qs.get("mode")==="clean") document.body.classList.add("clean");
 
   function baseUrl(){ return location.origin + location.pathname; }
@@ -426,6 +481,7 @@
     return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
   }
 
+  // --- Toast ---
   const toast = document.getElementById("toast");
   let toastTimer = null;
   function showToast(msg="Kopyalandı"){
@@ -439,9 +495,8 @@
     catch{ prompt("Kopyalamak için:", text); }
   }
 
-  // Premium-like (round caps/joins), consistent stroke
+  // --- Icons (minimal, professional) ---
   const S = `fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"`;
-
   const ICONS = {
     doc: `<span class="i18"><svg viewBox="0 0 24 24" ${S}>
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -473,13 +528,6 @@
     </svg></span>`,
     clip:`<span class="i16"><svg viewBox="0 0 24 24" ${S}>
       <path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l9.9-9.9a3.5 3.5 0 0 1 4.95 4.95l-10.6 10.6a2 2 0 1 1-2.83-2.83l9.9-9.9"/>
-    </svg></span>`,
-    alert:`<span class="i16"><svg viewBox="0 0 24 24" ${S}>
-      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-      <path d="M12 9v4"/><path d="M12 17h.01"/>
-    </svg></span>`,
-    fire:`<span class="i16"><svg viewBox="0 0 24 24" ${S}>
-      <path d="M12 22c4 0 7-3 7-7 0-2-1-4-3-5 0 2-1 3-2 4 0-3-2-6-5-8 0 4-3 5-3 9 0 4 3 7 6 7z"/>
     </svg></span>`
   };
 
@@ -546,36 +594,50 @@
     }
 
     if(tab === "sustainability"){
-      tabBody.innerHTML = `
-        <div class="cols2">
-          <div class="miniCard">
-            <div class="miniHead">${ICONS.leaf} Sustainability</div>
-            <div class="miniBody">
-              ${viewChip()}
-              <div style="height:12px"></div>
-              <div class="kv">
-                <div class="k">Carbon footprint</div>
-                <div class="v"><b style="color:var(--blue)">${esc(d.sustainability.carbon)}</b></div>
-                <div class="k">Methodology</div>
-                <div class="v">${esc(d.sustainability.method)}</div>
-                <div class="k">Recycled content</div>
-                <div class="v">${esc(d.sustainability.recycled)}</div>
-                <div class="k">Reference</div>
-                <div class="v">${esc(d.sustainability.recycled_note)}</div>
-              </div>
-            </div>
-          </div>
+      const carbon = d.sustainability?.carbon || "N/A";
+      const cls = d.sustainability?.class || "N/A";
+      const rec = d.sustainability?.recycled || "N/A";
+      const lifecycle = Array.isArray(d.sustainability?.lifecycle) ? d.sustainability.lifecycle : [];
 
-          <div class="miniCard">
-            <div class="miniHead">${ICONS.info} Responsible sourcing</div>
-            <div class="miniBody">
-              <div class="kv">
-                <div class="k">Due diligence</div>
-                <div class="v">${esc(d.sourcing.dd)}</div>
-                <div class="k">Collection / take-back</div>
-                <div class="v">${esc(d.sourcing.epr)}</div>
+      tabBody.innerHTML = `
+        <div class="miniCard">
+          <div class="miniHead">${ICONS.leaf} Sustainability</div>
+          <div class="miniBody">
+            ${viewChip()}
+            <div style="height:10px"></div>
+
+            <div class="kpis">
+              <div class="kpi">
+                <div class="t">Carbon footprint</div>
+                <div class="n" style="color:var(--blue)">${esc(carbon)}</div>
+                <div class="s">kgCO₂e / kWh</div>
+              </div>
+              <div class="kpi">
+                <div class="t">Performance class</div>
+                <div class="n">${esc(cls)}</div>
+                <div class="s">Declared</div>
+              </div>
+              <div class="kpi">
+                <div class="t">Recycled content</div>
+                <div class="n">${esc(rec)}</div>
+                <div class="s">Declared</div>
               </div>
             </div>
+
+            <details ${lifecycle.length ? "" : "style='opacity:.85'"} >
+              <summary>Lifecycle breakdown</summary>
+              ${
+                lifecycle.length
+                  ? `<ul class="detailList">
+                      ${lifecycle.map(x=>`<li><b>${esc(x.stage)}:</b> ${esc(x.value)}</li>`).join("")}
+                    </ul>`
+                  : `<div style="margin-top:10px; color:var(--muted);">No breakdown provided.</div>`
+              }
+              <div style="margin-top:10px; color:var(--muted2); font-size:12px;">
+                Method: ${esc(d.sustainability?.method || "N/A")}
+              </div>
+            </details>
+
           </div>
         </div>
       `;
@@ -588,12 +650,8 @@
           <div class="miniHead">${ICONS.recycle} Circularity</div>
           <div class="miniBody">
             <div class="kv">
-              <div class="k">Collection</div>
-              <div class="v">${esc(d.sourcing.epr)}</div>
-              <div class="k">Disassembly</div>
-              <div class="v">Available under restricted access.</div>
-              <div class="k">Second life</div>
-              <div class="v">Available under authority view.</div>
+              <div class="k">Collection / take-back</div>
+              <div class="v">${esc(d.circularity?.takeback || "N/A")}</div>
             </div>
           </div>
         </div>
@@ -614,6 +672,7 @@
       return;
     }
 
+    // Access
     const restricted = (role !== "professional" && role !== "authority");
     tabBody.innerHTML = `
       <div class="miniCard">
@@ -624,9 +683,12 @@
 
           <div class="kv">
             <div class="k">Professional</div>
-            <div class="v">${restricted ? "Restricted" : esc(d.professional.dismantling)}</div>
+            <div class="v">${restricted ? "Restricted" : esc(d.professional?.dismantling || "N/A")}</div>
+
             <div class="k">Authority</div>
-            <div class="v">${role==="authority" ? `${esc(d.authority.reports.join(" · "))}<br/>${esc(d.authority.soh)}` : "Restricted"}</div>
+            <div class="v">${role==="authority"
+              ? `${esc((d.authority?.reports||[]).join(" · "))}<br/>${esc(d.authority?.soh || "")}`
+              : "Restricted"}</div>
           </div>
 
           <div style="height:12px"></div>
@@ -644,6 +706,7 @@
   function render(){
     if(!data){ renderNotFound(); return; }
 
+    // Overview + Safety (Public ilk ekran)
     const overview = `
       <div class="card">
         <div class="head">${ICONS.doc} DPP-Battery Passport</div>
@@ -675,16 +738,12 @@
       <div class="card">
         <div class="head">${ICONS.shield} Safety</div>
         <div class="body">
-          <div style="display:flex;align-items:center;gap:8px;color:var(--muted2);font-weight:800;margin-bottom:6px;">
-            ${ICONS.alert}<span>Hazardous substances</span>
-          </div>
+          <div style="color:var(--muted2); font-weight:900; margin-bottom:6px;">Hazardous substances</div>
           <div style="white-space:pre-line;">${esc(data.safety.hazardous)}</div>
 
           <div style="height:12px"></div>
 
-          <div style="display:flex;align-items:center;gap:8px;color:var(--muted2);font-weight:800;margin-bottom:6px;">
-            ${ICONS.fire}<span>Extinguishing agent</span>
-          </div>
+          <div style="color:var(--muted2); font-weight:900; margin-bottom:6px;">Extinguishing agent</div>
           <div style="color:var(--teal); font-weight:900;">${esc(data.safety.extinguishing)}</div>
         </div>
       </div>
@@ -717,6 +776,7 @@
 
   render();
 
+  // Header buttons
   document.getElementById("copyLink").onclick = ()=> copy(location.href);
   document.getElementById("goAccess").onclick = ()=> location.href = linkFor({ tab:"access", role: (role==="public" ? "professional" : role) });
 </script>
