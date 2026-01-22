@@ -55,7 +55,6 @@
       padding: 18px 12px 52px;
       padding-bottom: calc(52px + env(safe-area-inset-bottom, 0px));
     }
-
     .shell{
       border: 1px solid var(--line);
       border-radius: 22px;
@@ -64,9 +63,7 @@
       overflow: hidden;
       position: relative;
     }
-    .shell > *{ position: relative; }
 
-    /* Header */
     .header{
       display:flex;
       align-items:center;
@@ -92,7 +89,6 @@
       line-height: 1.2;
       white-space: nowrap;
     }
-
     .topright{ display:flex; align-items:center; gap: 10px; flex-wrap:wrap; justify-content:flex-end; }
 
     .btn{
@@ -126,7 +122,6 @@
     }
     .content{ padding: 14px; }
 
-    /* Cards */
     .grid2{
       display:grid;
       grid-template-columns: 1.15fr .85fr;
@@ -172,14 +167,13 @@
 
     .kv{
       display:grid;
-      grid-template-columns: 150px 1fr;
+      grid-template-columns: 165px 1fr;
       gap: 8px 12px;
       align-items:start;
     }
     .k{ color: var(--muted2); }
     .v{ color: var(--text); word-break: break-word; }
 
-    /* Tabs */
     .tabsShell{
       margin-top: 12px;
       border: 1px solid var(--line);
@@ -225,7 +219,6 @@
       background: rgba(103,199,255,.10);
       border-color: rgba(103,199,255,.22);
     }
-
     .tabsBody{ padding: 14px; }
 
     .cols2{
@@ -255,7 +248,6 @@
       line-height: 1.55;
     }
 
-    /* KPI strip */
     .kpis{
       display:grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -277,6 +269,7 @@
       border-radius: 16px;
       background: rgba(255,255,255,.03);
       padding: 10px 12px;
+      margin-top: 10px;
     }
     summary{
       cursor:pointer;
@@ -305,13 +298,11 @@
     }
     .dot{ width:8px; height:8px; border-radius:999px; background: var(--blue); }
 
-    /* SVG sizing: minimal & consistent */
     .i18 svg{ width:18px; height:18px; }
     .i16 svg{ width:16px; height:16px; }
     .i14 svg{ width:14px; height:14px; }
     svg{ opacity:.92; }
 
-    /* Toast */
     .toast{
       position: fixed;
       left: 50%;
@@ -329,10 +320,7 @@
       pointer-events: none;
       transition: opacity .18s ease, transform .18s ease;
     }
-    .toast.show{
-      opacity: 1;
-      transform: translateX(-50%) translateY(-6px);
-    }
+    .toast.show{ opacity: 1; transform: translateX(-50%) translateY(-6px); }
 
     @media (max-width: 920px){
       .grid2{ grid-template-columns: 1fr; }
@@ -347,7 +335,6 @@
       .kpis{ grid-template-columns: 1fr; }
     }
 
-    /* Clean mode (QR için) */
     .clean .header,
     .clean .subline { display:none !important; }
   </style>
@@ -377,14 +364,30 @@
   <div class="toast" id="toast">Kopyalandı</div>
 
 <script>
-  // --- Demo DB (teze uygun: CN vs EU örneği) ---
+  // ------------------------------------------------------------
+  // Demo DB (CN vs EU) — “gereklilik” alanları eklenmiştir.
+  // ------------------------------------------------------------
   const DB = {
     "urn:iso:15459:DPPBAT.CN.EV.2026.000001": {
+      identification: {
+        upi: { gtin: "06912345678901", serial: "CN2026-000001" }, // UPI örnek
+        uid: "urn:iso:15459:DPPBAT.CN.EV.2026.000001"
+      },
       overview: {
-        uid: "urn:iso:15459:DPPBAT.CN.EV.2026.000001",
         category: "EV traction battery",
-        manufacturer: "Shenzhen PowerCell Ltd. (CN)",
-        site: "Shenzhen, Guangdong (CN)",
+        model: "PC-EV-NMC811-75kWh"
+      },
+      manufacturer: {
+        name: "Shenzhen PowerCell Ltd.",
+        brand: "PowerCell",
+        operator_id: "UOI-CN-POWER-0001", // Unique Operator Identifier (örnek)
+        address: "Nanshan District, Shenzhen, Guangdong, China",
+        email: "compliance@powercell.example",
+        website: "https://powercell.example"
+      },
+      facility: {
+        ufi: "UFI-CN-SZ-PLANT-01", // Unique Facility Identifier (örnek)
+        location: "Shenzhen, Guangdong (CN)",
         production: "December 2026"
       },
       safety: {
@@ -394,7 +397,8 @@
       sustainability: {
         carbon: "58.0 kgCO₂e / kWh",
         class: "C",
-        recycled: "Co 6% · Ni 5% · Li 2%",
+        recycled: { co: "6%", ni: "5%", li: "2%", pb: "0%" },
+        renewable_share: "0% (N/A)", // varsa
         lifecycle: [
           { stage: "Raw materials", value: "32.0 kgCO₂e/kWh" },
           { stage: "Cell manufacturing", value: "18.5 kgCO₂e/kWh" },
@@ -403,28 +407,81 @@
         ],
         method: "Methodology reference"
       },
+      performance: {
+        nominal_capacity_ah: "210 Ah",
+        voltage_range: "min 2.8 V · nom 3.7 V · max 4.2 V (cell)",
+        original_power_w: "150,000 W (peak, example)",
+        temperature_range: "-20°C to +55°C (operation)",
+        expected_life: { cycle_life: "1,200 cycles (ref conditions)", calendar_life: "10 years (ref conditions)" },
+        energy_efficiency: { initial: "93%", at_50pct_cycle_life: "89%" },
+        internal_resistance: { cell: "1.8 mΩ", pack: "22 mΩ" }
+      },
       circularity: {
         takeback: "National collection / take-back guidance (placeholder)."
       },
+      materials: {
+        chemistry: "NMC 811",
+        critical_materials: ["Cobalt", "Lithium", "Nickel", "Graphite"],
+        hazardous_substances: ["Nickel compounds", "Cobalt compounds (declared)"]
+      },
+      repair_disassembly: {
+        exploded_diagram_url: "https://example.com/exploded-diagram",
+        disassembly_steps: [
+          "Isolate HV and verify zero potential.",
+          "Remove enclosure fasteners (Torx T30, x24).",
+          "Disconnect BMS harness and thermal interface."
+        ],
+        fasteners: "Torx T30 · x24 (example)",
+        tools: ["Insulated torque wrench", "Torx T30 bit", "PPE (Class 0 gloves)"],
+        precautions: ["Thermal runaway risk", "Electrolyte exposure risk"]
+      },
+      spare_parts: [
+        { part_no: "SP-CN-001", name: "BMS Harness", supplier: "PowerCell Service", contact: "service@powercell.example" },
+        { part_no: "SP-CN-002", name: "Seal Kit", supplier: "PowerCell Service", contact: "service@powercell.example" }
+      ],
       documents: [
         { title: "EU Declaration of Conformity (placeholder)", url: "https://example.com/eu-doc" },
         { title: "Carbon footprint study (placeholder)", url: "https://example.com/pcf" }
       ],
-      professional: {
-        dismantling: "HV isolation + PPE required. Disassembly sequence available under restricted access."
+      authority_dynamic: {
+        soh: "98.4%",
+        remaining_capability: "Capacity 98% · Power 97% (example)",
+        usage_history: {
+          cycles: 62,
+          high_temp_exposure: "12 h > 45°C (example)",
+          deep_discharge_events: 1,
+          incidents: "None reported"
+        },
+        status: "Original"
       },
-      authority: {
-        reports: ["Test Report ID: TR-CN-EV-2026-EMC-01"],
-        soh: "SoH 98.4% · cycles 62"
-      }
+      due_diligence: [
+        { material: "Cobalt", evidence: "Responsible sourcing report (placeholder)", url: "https://example.com/dd-cobalt" },
+        { material: "Lithium", evidence: "Supplier audit statement (placeholder)", url: "https://example.com/dd-lithium" },
+        { material: "Nickel", evidence: "Certification (placeholder)", url: "https://example.com/dd-nickel" },
+        { material: "Graphite", evidence: "Traceability note (placeholder)", url: "https://example.com/dd-graphite" }
+      ]
     },
 
     "urn:iso:15459:DPPBAT.EU.EV.2026.000001": {
+      identification: {
+        upi: { gtin: "08712345678901", serial: "EU2026-000001" },
+        uid: "urn:iso:15459:DPPBAT.EU.EV.2026.000001"
+      },
       overview: {
-        uid: "urn:iso:15459:DPPBAT.EU.EV.2026.000001",
         category: "EV traction battery",
-        manufacturer: "EuroCell Energy S.A. (EU)",
-        site: "Wroclaw (PL)",
+        model: "EC-EV-NMC811-75kWh"
+      },
+      manufacturer: {
+        name: "EuroCell Energy S.A.",
+        brand: "EuroCell",
+        operator_id: "UOI-EU-EUROCELL-0001",
+        address: "Wroclaw, Poland",
+        email: "compliance@eurocell.example",
+        website: "https://eurocell.example"
+      },
+      facility: {
+        ufi: "UFI-EU-PL-PLANT-01",
+        location: "Wroclaw (PL)",
         production: "December 2026"
       },
       safety: {
@@ -434,7 +491,8 @@
       sustainability: {
         carbon: "41.5 kgCO₂e / kWh",
         class: "B",
-        recycled: "Co 10% · Ni 8% · Li 4%",
+        recycled: { co: "10%", ni: "8%", li: "4%", pb: "0%" },
+        renewable_share: "15% (example)",
         lifecycle: [
           { stage: "Raw materials", value: "22.0 kgCO₂e/kWh" },
           { stage: "Cell manufacturing", value: "14.0 kgCO₂e/kWh" },
@@ -443,26 +501,75 @@
         ],
         method: "Methodology reference"
       },
+      performance: {
+        nominal_capacity_ah: "210 Ah",
+        voltage_range: "min 2.8 V · nom 3.7 V · max 4.2 V (cell)",
+        original_power_w: "150,000 W (peak, example)",
+        temperature_range: "-20°C to +55°C (operation)",
+        expected_life: { cycle_life: "1,300 cycles (ref conditions)", calendar_life: "12 years (ref conditions)" },
+        energy_efficiency: { initial: "94%", at_50pct_cycle_life: "90%" },
+        internal_resistance: { cell: "1.7 mΩ", pack: "20 mΩ" }
+      },
       circularity: {
         takeback: "National collection / take-back guidance (placeholder)."
       },
+      materials: {
+        chemistry: "NMC 811",
+        critical_materials: ["Cobalt", "Lithium", "Nickel", "Graphite"],
+        hazardous_substances: ["Nickel compounds (declared)"]
+      },
+      repair_disassembly: {
+        exploded_diagram_url: "https://example.com/exploded-diagram",
+        disassembly_steps: [
+          "Isolate HV and verify zero potential.",
+          "Remove enclosure fasteners (Torx T30, x22).",
+          "Disconnect BMS harness and thermal interface."
+        ],
+        fasteners: "Torx T30 · x22 (example)",
+        tools: ["Insulated torque wrench", "Torx T30 bit", "PPE (Class 0 gloves)"],
+        precautions: ["Thermal runaway precautions", "Electrolyte exposure risk"]
+      },
+      spare_parts: [
+        { part_no: "SP-EU-001", name: "BMS Harness", supplier: "EuroCell Service", contact: "service@eurocell.example" },
+        { part_no: "SP-EU-002", name: "Seal Kit", supplier: "EuroCell Service", contact: "service@eurocell.example" }
+      ],
       documents: [
         { title: "EU Declaration of Conformity (placeholder)", url: "https://example.com/eu-doc" },
         { title: "Carbon footprint study (placeholder)", url: "https://example.com/pcf" }
       ],
-      professional: {
-        dismantling: "HV isolation + thermal-runaway precautions. Disassembly sequence available under restricted access."
+      authority_dynamic: {
+        soh: "99.1%",
+        remaining_capability: "Capacity 99% · Power 98% (example)",
+        usage_history: {
+          cycles: 58,
+          high_temp_exposure: "6 h > 45°C (example)",
+          deep_discharge_events: 0,
+          incidents: "None reported"
+        },
+        status: "Original"
       },
-      authority: {
-        reports: ["Test Report ID: TR-EU-EV-2026-EMC-01"],
-        soh: "SoH 99.1% · cycles 58"
-      }
+      due_diligence: [
+        { material: "Cobalt", evidence: "Responsible sourcing report (placeholder)", url: "https://example.com/dd-cobalt" },
+        { material: "Lithium", evidence: "Supplier audit statement (placeholder)", url: "https://example.com/dd-lithium" },
+        { material: "Nickel", evidence: "Certification (placeholder)", url: "https://example.com/dd-nickel" },
+        { material: "Graphite", evidence: "Traceability note (placeholder)", url: "https://example.com/dd-graphite" }
+      ]
     }
   };
 
-  // --- URL params ---
+  // ------------------------------------------------------------
+  // URL Params: uid OR short id=CN/EU
+  // ------------------------------------------------------------
   const qs = new URLSearchParams(location.search);
-  const uid = qs.get("uid") || Object.keys(DB)[0];
+
+  const UID_MAP = {
+    "CN": "urn:iso:15459:DPPBAT.CN.EV.2026.000001",
+    "EU": "urn:iso:15459:DPPBAT.EU.EV.2026.000001"
+  };
+
+  const id = (qs.get("id") || "").toUpperCase();
+  const uid = qs.get("uid") || UID_MAP[id] || Object.keys(DB)[0];
+
   const role = (qs.get("role") || "public").toLowerCase(); // public|professional|authority
   const tab  = (qs.get("tab")  || "details").toLowerCase(); // details|sustainability|circularity|documents|access
 
@@ -478,10 +585,14 @@
     return `${baseUrl()}?${p.toString()}`;
   }
   function esc(s){
-    return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+    return String(s ?? "").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
   }
 
-  // --- Toast ---
+  const ROLE_LEVEL = { public: 0, professional: 1, authority: 2 };
+  function canSee(minRole){
+    return (ROLE_LEVEL[role] ?? 0) >= (ROLE_LEVEL[minRole] ?? 0);
+  }
+
   const toast = document.getElementById("toast");
   let toastTimer = null;
   function showToast(msg="Kopyalandı"){
@@ -495,7 +606,7 @@
     catch{ prompt("Kopyalamak için:", text); }
   }
 
-  // --- Icons (minimal, professional) ---
+  // Icons
   const S = `fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"`;
   const ICONS = {
     doc: `<span class="i18"><svg viewBox="0 0 24 24" ${S}>
@@ -556,37 +667,83 @@
     const d = data;
 
     if(tab === "details"){
+      const upi = d.identification?.upi || {};
       tabBody.innerHTML = `
-        <div class="cols2">
-          <div class="miniCard">
-            <div class="miniHead">${ICONS.info} Details</div>
-            <div class="miniBody">
-              ${viewChip()}
-              <div style="height:10px"></div>
-              <div class="kv">
-                <div class="k">Shareable link</div>
-                <div class="v"><a href="${esc(linkFor({uid, role, tab:"details"}))}">${esc(linkFor({uid, role, tab:"details"}))}</a></div>
-              </div>
-            </div>
-          </div>
+        <div class="miniCard">
+          <div class="miniHead">${ICONS.info} Details</div>
+          <div class="miniBody">
+            ${viewChip()}
+            <div style="height:10px"></div>
 
-          <div class="miniCard">
-            <div class="miniHead">${ICONS.doc} Passport</div>
-            <div class="miniBody">
-              <div class="kv">
-                <div class="k">UID</div>
-                <div class="v"><span class="mono">${esc(d.overview.uid)}</span></div>
-                <div class="k">Select</div>
-                <div class="v">
-                  <select id="pick" style="width:100%; padding:12px 12px; border-radius:14px; border:1px solid var(--line); background:rgba(255,255,255,.04); color:var(--text); font-size:14px;">
-                    ${Object.keys(DB).map(k=>`<option value="${k}" ${k===uid?'selected':''}>${k.includes(".CN.")?"China (CN)":"EU (EU)"} — ${k}</option>`).join("")}
-                  </select>
-                </div>
+            <div class="kv">
+              <div class="k">Shareable link</div>
+              <div class="v"><a href="${esc(linkFor({uid, role, tab:"details"}))}">${esc(linkFor({uid, role, tab:"details"}))}</a></div>
+
+              <div class="k">UID</div>
+              <div class="v inlineLink"><span class="mono">${esc(d.identification?.uid)}</span>
+                <span class="iconBtn" id="copyUid" title="Copy UID">${ICONS.clip}</span>
+              </div>
+
+              <div class="k">Select</div>
+              <div class="v">
+                <select id="pick" style="width:100%; padding:12px 12px; border-radius:14px; border:1px solid var(--line); background:rgba(255,255,255,.04); color:var(--text); font-size:14px;">
+                  ${Object.keys(DB).map(k=>`<option value="${k}" ${k===uid?'selected':''}>${k.includes(".CN.")?"China (CN)":"EU (EU)"} — ${k}</option>`).join("")}
+                </select>
               </div>
             </div>
+
+            <details>
+              <summary>Identifiers</summary>
+              <div class="kv" style="margin-top:10px;">
+                <div class="k">UPI (GTIN)</div><div class="v"><span class="mono">${esc(upi.gtin)}</span></div>
+                <div class="k">UPI (Serial)</div><div class="v"><span class="mono">${esc(upi.serial)}</span></div>
+                <div class="k">Category</div><div class="v">${esc(d.overview?.category)}</div>
+                <div class="k">Model</div><div class="v">${esc(d.overview?.model)}</div>
+              </div>
+            </details>
+
+            <details>
+              <summary>Manufacturer</summary>
+              <div class="kv" style="margin-top:10px;">
+                <div class="k">Name</div><div class="v">${esc(d.manufacturer?.name)}</div>
+                <div class="k">Brand</div><div class="v">${esc(d.manufacturer?.brand)}</div>
+                <div class="k">Operator ID</div><div class="v"><span class="mono">${esc(d.manufacturer?.operator_id)}</span></div>
+                <div class="k">Address</div><div class="v">${esc(d.manufacturer?.address)}</div>
+                <div class="k">Email</div><div class="v">${esc(d.manufacturer?.email)}</div>
+                <div class="k">Website</div><div class="v"><a href="${esc(d.manufacturer?.website)}" target="_blank" rel="noopener">${esc(d.manufacturer?.website)}</a></div>
+              </div>
+            </details>
+
+            <details>
+              <summary>Facility & production</summary>
+              <div class="kv" style="margin-top:10px;">
+                <div class="k">Facility ID (UFI)</div><div class="v"><span class="mono">${esc(d.facility?.ufi)}</span></div>
+                <div class="k">Location</div><div class="v">${esc(d.facility?.location)}</div>
+                <div class="k">Production date</div><div class="v">${esc(d.facility?.production)}</div>
+              </div>
+            </details>
+
+            <details>
+              <summary>Performance & durability</summary>
+              <div class="kv" style="margin-top:10px;">
+                <div class="k">Nominal capacity</div><div class="v">${esc(d.performance?.nominal_capacity_ah)}</div>
+                <div class="k">Voltage range</div><div class="v">${esc(d.performance?.voltage_range)}</div>
+                <div class="k">Original power</div><div class="v">${esc(d.performance?.original_power_w)}</div>
+                <div class="k">Temperature</div><div class="v">${esc(d.performance?.temperature_range)}</div>
+
+                <div class="k">Cycle life</div><div class="v">${esc(d.performance?.expected_life?.cycle_life)}</div>
+                <div class="k">Calendar life</div><div class="v">${esc(d.performance?.expected_life?.calendar_life)}</div>
+
+                <div class="k">Energy efficiency</div><div class="v">${esc(d.performance?.energy_efficiency?.initial)} (initial) · ${esc(d.performance?.energy_efficiency?.at_50pct_cycle_life)} (@50%)</div>
+                <div class="k">Internal resistance</div><div class="v">${esc(d.performance?.internal_resistance?.cell)} (cell) · ${esc(d.performance?.internal_resistance?.pack)} (pack)</div>
+              </div>
+            </details>
+
           </div>
         </div>
       `;
+
+      document.getElementById("copyUid").onclick = ()=> copy(d.identification?.uid || "");
       document.getElementById("pick").addEventListener("change",(e)=>{
         location.href = linkFor({ uid: e.target.value, tab:"details" });
       });
@@ -594,11 +751,8 @@
     }
 
     if(tab === "sustainability"){
-      const carbon = d.sustainability?.carbon || "N/A";
-      const cls = d.sustainability?.class || "N/A";
-      const rec = d.sustainability?.recycled || "N/A";
-      const lifecycle = Array.isArray(d.sustainability?.lifecycle) ? d.sustainability.lifecycle : [];
-
+      const s = d.sustainability || {};
+      const rec = s.recycled || {};
       tabBody.innerHTML = `
         <div class="miniCard">
           <div class="miniHead">${ICONS.leaf} Sustainability</div>
@@ -609,35 +763,34 @@
             <div class="kpis">
               <div class="kpi">
                 <div class="t">Carbon footprint</div>
-                <div class="n" style="color:var(--blue)">${esc(carbon)}</div>
+                <div class="n" style="color:var(--blue)">${esc(s.carbon)}</div>
                 <div class="s">kgCO₂e / kWh</div>
               </div>
               <div class="kpi">
                 <div class="t">Performance class</div>
-                <div class="n">${esc(cls)}</div>
+                <div class="n">${esc(s.class)}</div>
                 <div class="s">Declared</div>
               </div>
               <div class="kpi">
                 <div class="t">Recycled content</div>
-                <div class="n">${esc(rec)}</div>
-                <div class="s">Declared</div>
+                <div class="n">Co ${esc(rec.co)} · Ni ${esc(rec.ni)} · Li ${esc(rec.li)}</div>
+                <div class="s">Pb ${esc(rec.pb)}</div>
               </div>
             </div>
 
-            <details ${lifecycle.length ? "" : "style='opacity:.85'"} >
-              <summary>Lifecycle breakdown</summary>
-              ${
-                lifecycle.length
-                  ? `<ul class="detailList">
-                      ${lifecycle.map(x=>`<li><b>${esc(x.stage)}:</b> ${esc(x.value)}</li>`).join("")}
-                    </ul>`
-                  : `<div style="margin-top:10px; color:var(--muted);">No breakdown provided.</div>`
-              }
-              <div style="margin-top:10px; color:var(--muted2); font-size:12px;">
-                Method: ${esc(d.sustainability?.method || "N/A")}
-              </div>
-            </details>
+            <div class="kv">
+              <div class="k">Renewable share</div>
+              <div class="v">${esc(s.renewable_share)}</div>
+              <div class="k">Method</div>
+              <div class="v">${esc(s.method)}</div>
+            </div>
 
+            <details>
+              <summary>Lifecycle breakdown</summary>
+              <ul class="detailList">
+                ${(s.lifecycle||[]).map(x=>`<li><b>${esc(x.stage)}:</b> ${esc(x.value)}</li>`).join("")}
+              </ul>
+            </details>
           </div>
         </div>
       `;
@@ -645,13 +798,61 @@
     }
 
     if(tab === "circularity"){
+      const showPro = canSee("professional") || canSee("authority");
       tabBody.innerHTML = `
-        <div class="miniCard">
-          <div class="miniHead">${ICONS.recycle} Circularity</div>
-          <div class="miniBody">
-            <div class="kv">
-              <div class="k">Collection / take-back</div>
-              <div class="v">${esc(d.circularity?.takeback || "N/A")}</div>
+        <div class="cols2">
+          <div class="miniCard">
+            <div class="miniHead">${ICONS.recycle} Circularity</div>
+            <div class="miniBody">
+              ${viewChip()}
+              <div style="height:10px"></div>
+              <div class="kv">
+                <div class="k">Collection / take-back</div>
+                <div class="v">${esc(d.circularity?.takeback)}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="miniCard">
+            <div class="miniHead">${ICONS.recycle} Repair & materials</div>
+            <div class="miniBody">
+              ${
+                showPro
+                ? `
+                  <details open>
+                    <summary>Chemistry & materials</summary>
+                    <ul class="detailList">
+                      <li><b>Chemistry:</b> ${esc(d.materials?.chemistry)}</li>
+                      <li><b>Critical materials:</b> ${esc((d.materials?.critical_materials||[]).join(", "))}</li>
+                      <li><b>Declared hazardous:</b> ${esc((d.materials?.hazardous_substances||[]).join(", "))}</li>
+                    </ul>
+                  </details>
+
+                  <details>
+                    <summary>Disassembly & repair</summary>
+                    <div style="margin-top:10px; color:var(--muted);">
+                      <div><b>Fasteners:</b> ${esc(d.repair_disassembly?.fasteners)}</div>
+                      <div><b>Exploded diagram:</b> <a href="${esc(d.repair_disassembly?.exploded_diagram_url)}" target="_blank" rel="noopener">link</a></div>
+                      <div style="margin-top:10px;"><b>Steps</b></div>
+                      <ul class="detailList">${(d.repair_disassembly?.disassembly_steps||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+
+                      <div style="margin-top:10px;"><b>Tools</b></div>
+                      <ul class="detailList">${(d.repair_disassembly?.tools||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+
+                      <div style="margin-top:10px;"><b>Precautions</b></div>
+                      <ul class="detailList">${(d.repair_disassembly?.precautions||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+                    </div>
+                  </details>
+
+                  <details>
+                    <summary>Spare parts</summary>
+                    <ul class="detailList">
+                      ${(d.spare_parts||[]).map(p=>`<li><b>${esc(p.part_no)}</b> — ${esc(p.name)} · ${esc(p.supplier)} · ${esc(p.contact)}</li>`).join("")}
+                    </ul>
+                  </details>
+                `
+                : `<div style="color:var(--muted);">Restricted (Professional / Authority)</div>`
+              }
             </div>
           </div>
         </div>
@@ -673,7 +874,7 @@
     }
 
     // Access
-    const restricted = (role !== "professional" && role !== "authority");
+    const showAuthority = canSee("authority");
     tabBody.innerHTML = `
       <div class="miniCard">
         <div class="miniHead">${ICONS.key} Access</div>
@@ -681,24 +882,49 @@
           ${viewChip()}
           <div style="height:12px"></div>
 
-          <div class="kv">
-            <div class="k">Professional</div>
-            <div class="v">${restricted ? "Restricted" : esc(d.professional?.dismantling || "N/A")}</div>
+          <details>
+            <summary>Professional</summary>
+            <div style="margin-top:10px; color:var(--muted);">
+              ${canSee("professional") || canSee("authority") ? "Enabled (see Circularity tab for repair/materials)." : "Restricted"}
+            </div>
+          </details>
 
-            <div class="k">Authority</div>
-            <div class="v">${role==="authority"
-              ? `${esc((d.authority?.reports||[]).join(" · "))}<br/>${esc(d.authority?.soh || "")}`
-              : "Restricted"}</div>
-          </div>
+          <details>
+            <summary>Authority</summary>
+            <div style="margin-top:10px;">
+              ${
+                showAuthority
+                ? `
+                  <div class="kv">
+                    <div class="k">SoH</div><div class="v"><b style="color:var(--blue)">${esc(d.authority_dynamic?.soh)}</b></div>
+                    <div class="k">Remaining capability</div><div class="v">${esc(d.authority_dynamic?.remaining_capability)}</div>
+                    <div class="k">Cycles</div><div class="v">${esc(d.authority_dynamic?.usage_history?.cycles)}</div>
+                    <div class="k">High temp exposure</div><div class="v">${esc(d.authority_dynamic?.usage_history?.high_temp_exposure)}</div>
+                    <div class="k">Deep discharge</div><div class="v">${esc(d.authority_dynamic?.usage_history?.deep_discharge_events)}</div>
+                    <div class="k">Incidents</div><div class="v">${esc(d.authority_dynamic?.usage_history?.incidents)}</div>
+                    <div class="k">Status</div><div class="v">${esc(d.authority_dynamic?.status)}</div>
+                  </div>
+
+                  <details>
+                    <summary>Due diligence</summary>
+                    <ul class="detailList">
+                      ${(d.due_diligence||[]).map(x=>`<li><b>${esc(x.material)}:</b> <a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.evidence)}</a></li>`).join("")}
+                    </ul>
+                  </details>
+                `
+                : `<div style="color:var(--muted);">Restricted</div>`
+              }
+            </div>
+          </details>
 
           <div style="height:12px"></div>
-
           <button class="btn primary" id="goPro2" style="width:100%; justify-content:center;">Open Professional view</button>
           <div style="height:10px"></div>
           <button class="btn" id="goAuth2" style="width:100%; justify-content:center;">Open Authority view</button>
         </div>
       </div>
     `;
+
     document.getElementById("goPro2").onclick  = ()=> location.href = linkFor({ role:"professional", tab:"access" });
     document.getElementById("goAuth2").onclick = ()=> location.href = linkFor({ role:"authority", tab:"access" });
   }
@@ -706,7 +932,6 @@
   function render(){
     if(!data){ renderNotFound(); return; }
 
-    // Overview + Safety (Public ilk ekran)
     const overview = `
       <div class="card">
         <div class="head">${ICONS.doc} DPP-Battery Passport</div>
@@ -714,21 +939,14 @@
           <div class="kv">
             <div class="k">UID</div>
             <div class="v inlineLink">
-              <span class="mono">${esc(data.overview.uid)}</span>
-              <span class="iconBtn" id="copyUid" title="Copy UID">${ICONS.clip}</span>
+              <span class="mono">${esc(data.identification?.uid)}</span>
+              <span class="iconBtn" id="copyUidTop" title="Copy UID">${ICONS.clip}</span>
             </div>
-
-            <div class="k">Type</div>
-            <div class="v">${esc(data.overview.category)}</div>
-
-            <div class="k">Manufacturer</div>
-            <div class="v">${esc(data.overview.manufacturer)}</div>
-
-            <div class="k">Site</div>
-            <div class="v">${esc(data.overview.site)}</div>
-
-            <div class="k">Production date</div>
-            <div class="v">${esc(data.overview.production)}</div>
+            <div class="k">Type</div><div class="v">${esc(data.overview?.category)}</div>
+            <div class="k">Model</div><div class="v">${esc(data.overview?.model)}</div>
+            <div class="k">Manufacturer</div><div class="v">${esc(data.manufacturer?.name)} (${esc(data.manufacturer?.brand)})</div>
+            <div class="k">Site</div><div class="v">${esc(data.facility?.location)}</div>
+            <div class="k">Production date</div><div class="v">${esc(data.facility?.production)}</div>
           </div>
         </div>
       </div>
@@ -739,12 +957,12 @@
         <div class="head">${ICONS.shield} Safety</div>
         <div class="body">
           <div style="color:var(--muted2); font-weight:900; margin-bottom:6px;">Hazardous substances</div>
-          <div style="white-space:pre-line;">${esc(data.safety.hazardous)}</div>
+          <div style="white-space:pre-line;">${esc(data.safety?.hazardous)}</div>
 
           <div style="height:12px"></div>
 
           <div style="color:var(--muted2); font-weight:900; margin-bottom:6px;">Extinguishing agent</div>
-          <div style="color:var(--teal); font-weight:900;">${esc(data.safety.extinguishing)}</div>
+          <div style="color:var(--teal); font-weight:900;">${esc(data.safety?.extinguishing)}</div>
         </div>
       </div>
     `;
@@ -770,13 +988,12 @@
       location.href = linkFor({ tab: t.dataset.tab });
     });
 
-    document.getElementById("copyUid").onclick = ()=> copy(data.overview.uid);
+    document.getElementById("copyUidTop").onclick = ()=> copy(data.identification?.uid || "");
     showTabBody(document.getElementById("tabBody"));
   }
 
   render();
 
-  // Header buttons
   document.getElementById("copyLink").onclick = ()=> copy(location.href);
   document.getElementById("goAccess").onclick = ()=> location.href = linkFor({ tab:"access", role: (role==="public" ? "professional" : role) });
 </script>
